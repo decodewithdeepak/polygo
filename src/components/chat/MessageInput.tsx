@@ -17,7 +17,33 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { SendHorizontal } from "lucide-react";
+import { SendHorizontal, Sparkles } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+
+const SURPRISE_MESSAGES: Record<string, string[]> = {
+    en: ["Hey! How's your day going? 😊", "What's up! Hope you're having a great time! ✨", "Hi there! Anything fun happening today? 🎉", "Hope you're doing awesome! 💪", "Just wanted to say hello! 👋"],
+    hi: ["अरे! कैसे हो? 😊", "नमस्ते! आज कैसा दिन चल रहा है? ✨", "क्या हाल है दोस्त? 🎉", "बस हैलो कहना था! 👋", "उम्मीद है सब बढ़िया है! 💪"],
+    bn: ["হ্যালো! কেমন আছো? 😊", "কী খবর? আশা করি ভালো আছো! ✨", "আজ কেমন দিন যাচ্ছে? 🎉"],
+    ta: ["வணக்கம்! எப்படி இருக்கீங்க? 😊", "என்ன விசேஷம்? ✨", "நல்லா இருக்கீங்களா? 🎉"],
+    te: ["హాయ్! ఎలా ఉన్నారు? 😊", "ఏంటి విశేషం? ✨", "బాగున్నారా? 🎉"],
+    mr: ["नमस्कार! कसे आहात? 😊", "काय चाललंय? ✨", "मजेत आहात ना? 🎉"],
+    gu: ["હેલો! કેમ છો? 😊", "શું ચાલે છે? ✨", "મજામાં છો? 🎉"],
+    kn: ["ಹಾಯ್! ಹೇಗಿದ್ದೀರಾ? 😊", "ಏನು ವಿಶೇಷ? ✨", "ಚೆನ್ನಾಗಿದ್ದೀರಾ? 🎉"],
+    ml: ["ഹായ്! എങ്ങനെ ഉണ്ട്? 😊", "എന്താ വിശേഷം? ✨", "സുഖമാണോ? 🎉"],
+    pa: ["ਸਤ ਸ੍ਰੀ ਅਕਾਲ! ਕਿਵੇਂ ਹੋ? 😊", "ਕੀ ਹਾਲ ਹੈ? ✨", "ਮਜ਼ੇ ਵਿੱਚ ਹੋ? 🎉"],
+    ur: ["ہیلو! کیسے ہو? 😊", "کیا حال ہے? ✨", "سب خیریت? 🎉"],
+    ja: ["やあ！元気？😊", "こんにちは！調子どう？✨", "今日はいい日？🎉"],
+    es: ["¡Hola! ¿Cómo estás? 😊", "¿Qué tal? ¡Espero que bien! ✨", "¡Saludos amigo! 🎉"],
+    fr: ["Salut ! Comment ça va ? 😊", "Coucou ! Quoi de neuf ? ✨", "Hello ! Bonne journée ? 🎉"],
+    de: ["Hallo! Wie geht's? 😊", "Hey! Was gibt's Neues? ✨", "Na, alles klar? 🎉"],
+    zh: ["嗨！你好吗？😊", "最近怎么样？✨", "今天过得好吗？🎉"],
+    ko: ["안녕! 잘 지내? 😊", "오늘 어때? ✨", "좋은 하루 보내고 있어? 🎉"],
+    pt: ["Olá! Como vai? 😊", "E aí! Tudo bem? ✨", "Oi! Como está o dia? 🎉"],
+    ru: ["Привет! Как дела? 😊", "Что нового? ✨", "Как настроение? 🎉"],
+    ar: ["مرحبا! كيف حالك؟ 😊", "أهلاً! شو أخبارك؟ ✨", "يومك كيف؟ 🎉"],
+    it: ["Ciao! Come stai? 😊", "Ehi! Come va? ✨", "Tutto bene? 🎉"],
+};
 
 interface MessageInputProps {
     onSendMessage: (content: string) => void;
@@ -31,6 +57,15 @@ export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping 
     const [messageContent, setMessageContent] = useState("");
     const [isSending, setIsSending] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const me = useQuery(api.users.getMe);
+
+    const handleSurprise = () => {
+        const lang = me?.preferredLanguage || "en";
+        const messages = SURPRISE_MESSAGES[lang] || SURPRISE_MESSAGES.en;
+        const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+        setMessageContent(randomMsg);
+        textareaRef.current?.focus();
+    };
 
     // Auto-resize the textarea as the user types more lines
     // This creates a smooth expanding effect instead of a fixed-height box
@@ -120,10 +155,20 @@ export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping 
                     placeholder="Type a message..."
                     disabled={isSending}
                     rows={1}
-                    className="flex-1 resize-none rounded-md border border-zinc-700 bg-zinc-800/40 px-4 py-3 text-sm text-white placeholder-zinc-500 outline-none transition-all focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 disabled:opacity-50"
+                    className="flex-1 resize-none overflow-hidden rounded-md border border-zinc-700 bg-zinc-800/40 px-4 py-3 text-sm text-white placeholder-zinc-500 outline-none transition-all focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 disabled:opacity-50"
                 // resize-none: prevents manual resize handle (we auto-resize instead)
                 // rows={1}: starts as a single line, expands automatically
                 />
+
+                {/* Surprise button — generates a friendly message in selected language */}
+                <button
+                    onClick={handleSurprise}
+                    disabled={isSending}
+                    className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-md bg-zinc-800/60 text-zinc-400 transition-all hover:bg-purple-600/20 hover:text-purple-400 disabled:cursor-not-allowed disabled:opacity-50 border border-zinc-700/50"
+                    title="Surprise! Generate a friendly message"
+                >
+                    <Sparkles className="h-4 w-4" />
+                </button>
 
                 {/* Send button — visual alternative to pressing Enter */}
                 <button

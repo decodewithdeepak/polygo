@@ -55,7 +55,7 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
 
     const userLang = me?.preferredLanguage || "en";
     const translation = message.translations?.[userLang];
-    const hasTranslation = !!translation && userLang !== "en"; // simplified check
+    const hasTranslation = !!translation;
     const displayContent = (hasTranslation && !showOriginal) ? translation : message.content;
     const isTranslated = hasTranslation && !showOriginal;
 

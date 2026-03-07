@@ -50,12 +50,43 @@ export default function Navbar() {
                         onChange={(e) => handleLanguageChange(e.target.value)}
                         className="bg-transparent text-xs font-medium text-zinc-200 outline-none cursor-pointer"
                     >
-                        <option value="en" className="bg-zinc-900">English</option>
-                        <option value="hi" className="bg-zinc-900">Hindi</option>
-                        <option value="ja" className="bg-zinc-900">Japanese</option>
-                        <option value="es" className="bg-zinc-900">Spanish</option>
-                        <option value="fr" className="bg-zinc-900">French</option>
-                        <option value="de" className="bg-zinc-900">German</option>
+                        <optgroup label="Indic" className="bg-zinc-900">
+                            <option value="en" className="bg-zinc-900">English</option>
+                            <option value="hi" className="bg-zinc-900">Hindi</option>
+                            <option value="bn" className="bg-zinc-900">Bengali</option>
+                            <option value="ta" className="bg-zinc-900">Tamil</option>
+                            <option value="te" className="bg-zinc-900">Telugu</option>
+                            <option value="mr" className="bg-zinc-900">Marathi</option>
+                            <option value="gu" className="bg-zinc-900">Gujarati</option>
+                            <option value="kn" className="bg-zinc-900">Kannada</option>
+                            <option value="ml" className="bg-zinc-900">Malayalam</option>
+                            <option value="pa" className="bg-zinc-900">Punjabi</option>
+                            <option value="ur" className="bg-zinc-900">Urdu</option>
+                            <option value="or" className="bg-zinc-900">Odia</option>
+                            <option value="as" className="bg-zinc-900">Assamese</option>
+                            <option value="mai" className="bg-zinc-900">Maithili</option>
+                            <option value="ne" className="bg-zinc-900">Nepali</option>
+                            <option value="sa" className="bg-zinc-900">Sanskrit</option>
+                            <option value="kok" className="bg-zinc-900">Konkani</option>
+                            <option value="doi" className="bg-zinc-900">Dogri</option>
+                            <option value="sd" className="bg-zinc-900">Sindhi</option>
+                            <option value="sat" className="bg-zinc-900">Santali</option>
+                            <option value="ks" className="bg-zinc-900">Kashmiri</option>
+                            <option value="mni" className="bg-zinc-900">Manipuri</option>
+                            <option value="brx" className="bg-zinc-900">Bodo</option>
+                        </optgroup>
+                        <optgroup label="Foreign" className="bg-zinc-900">
+                            <option value="ja" className="bg-zinc-900">Japanese</option>
+                            <option value="es" className="bg-zinc-900">Spanish</option>
+                            <option value="fr" className="bg-zinc-900">French</option>
+                            <option value="de" className="bg-zinc-900">German</option>
+                            <option value="zh" className="bg-zinc-900">Chinese</option>
+                            <option value="ko" className="bg-zinc-900">Korean</option>
+                            <option value="pt" className="bg-zinc-900">Portuguese</option>
+                            <option value="ru" className="bg-zinc-900">Russian</option>
+                            <option value="ar" className="bg-zinc-900">Arabic</option>
+                            <option value="it" className="bg-zinc-900">Italian</option>
+                        </optgroup>
                     </select>
                 </div>
             </div>

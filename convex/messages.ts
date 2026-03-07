@@ -88,13 +88,24 @@ export const send = mutation({
       isDeleted: false,
     });
 
-    // Step 5: Trigger AI processing in the background (Convex Action)
-    // This won't block the initial message delivery to the sender.
-    await ctx.scheduler.runAfter(0, (api as any).ai.processMessageAI, {
-      messageId,
-      text: args.content,
-      sourceLang: currentUser.preferredLanguage || "en",
-    });
+    // Step 5: Trigger AI translation only if the receiver speaks a different language.
+    // Look up the other participant's preferred language.
+    const receiverId = conversation.participantIds.find(
+      (id) => id !== currentUser._id
+    );
+    const receiver = receiverId ? await ctx.db.get(receiverId) : null;
+    const senderLang = currentUser.preferredLanguage || "en";
+    const receiverLang = receiver?.preferredLanguage || "en";
+
+    // Only call AI if languages differ — no point translating en→en
+    if (senderLang !== receiverLang) {
+      await ctx.scheduler.runAfter(0, (api as any).ai.processMessageAI, {
+        messageId,
+        text: args.content,
+        sourceLang: senderLang,
+        targetLang: receiverLang,
+      });
+    }
 
     return messageId;
   },
