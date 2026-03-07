@@ -1,6 +1,4 @@
-"use client";
-
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Logo from "./ui/Logo";
 
 interface SplashScreenProps {
@@ -8,13 +6,25 @@ interface SplashScreenProps {
 }
 
 export default function SplashScreen({ onComplete }: SplashScreenProps) {
+    const [error, setError] = useState<string | null>(null);
+
     useEffect(() => {
         const timer = setTimeout(() => {
-            onComplete();
+            // Guard against proceeding if an error is caught by something else
+            if (!error) onComplete();
         }, 2000);
 
-        return () => clearTimeout(timer);
-    }, [onComplete]);
+        // Global error listener for splash screen phase
+        const handleError = (event: ErrorEvent) => {
+            setError(`${event.error?.name || "Error"}: ${event.message}`);
+        };
+        window.addEventListener("error", handleError);
+
+        return () => {
+            clearTimeout(timer);
+            window.removeEventListener("error", handleError);
+        };
+    }, [onComplete, error]);
 
     return (
         <>
@@ -118,27 +128,50 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                     ))}
                 </div>
 
-                {/* Simple Progress Bar */}
-                <div
-                    style={{
-                        position: "absolute",
-                        bottom: 48,
-                        width: 200,
-                        height: 1,
-                        backgroundColor: "#1f2937",
-                        opacity: 0,
-                        animation: "fadeUp 0.3s ease-out 0.6s forwards",
-                    }}
-                >
+                {/* Simple Progress Bar or Error Log */}
+                {!error ? (
                     <div
                         style={{
-                            height: "100%",
-                            backgroundColor: "#fff",
-                            width: 0,
-                            animation: "fillBar 2s ease-in-out 0.2s forwards",
+                            position: "absolute",
+                            bottom: 48,
+                            width: 200,
+                            height: 1,
+                            backgroundColor: "#1f2937",
+                            opacity: 0,
+                            animation: "fadeUp 0.3s ease-out 0.6s forwards",
                         }}
-                    />
-                </div>
+                    >
+                        <div
+                            style={{
+                                height: "100%",
+                                backgroundColor: "#fff",
+                                width: 0,
+                                animation: "fillBar 2s ease-in-out 0.2s forwards",
+                            }}
+                        />
+                    </div>
+                ) : (
+                    <div
+                        style={{
+                            position: "absolute",
+                            bottom: 48,
+                            width: "90%",
+                            maxWidth: 600,
+                            padding: 16,
+                            borderRadius: 8,
+                            background: "rgba(127, 29, 29, 0.2)",
+                            border: "1px solid rgba(239, 68, 68, 0.3)",
+                            color: "#fca5a5",
+                            fontSize: "12px",
+                            fontFamily: "monospace",
+                            animation: "fadeUp 0.3s ease-out forwards",
+                            overflowX: "auto",
+                        }}
+                    >
+                        <div style={{ fontWeight: "bold", marginBottom: 4 }}>[Initialization Error]</div>
+                        {error}
+                    </div>
+                )}
             </div>
         </>
     );

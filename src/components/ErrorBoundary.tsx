@@ -95,16 +95,22 @@ export default class ErrorBoundary extends React.Component<
                             persists.
                         </p>
 
-                        {/* Error details — only shown in development for debugging */}
-                        {process.env.NODE_ENV === "development" && this.state.error && (
-                            <pre className="mt-2 max-w-lg overflow-auto rounded-lg bg-red-950/30 p-3 text-xs text-red-400">
-                                {this.state.error.message}
-                            </pre>
+                        {/* Error details — always shown for detailed logs as requested */}
+                        {this.state.error && (
+                            <div className="mt-4 w-full max-w-2xl overflow-hidden rounded-lg border border-red-500/30 bg-red-950/20 text-left">
+                                <div className="border-b border-red-500/30 bg-red-950/40 px-4 py-2 text-xs font-bold uppercase tracking-wider text-red-400">
+                                    Error Logs
+                                </div>
+                                <pre className="max-h-60 overflow-auto p-4 text-[10px] leading-relaxed text-red-300 selection:bg-red-500/30">
+                                    <div className="font-bold mb-1">{this.state.error.name}: {this.state.error.message}</div>
+                                    {this.state.error.stack}
+                                </pre>
+                            </div>
                         )}
 
                         <button
                             onClick={this.handleReset}
-                            className="mt-4 rounded-lg bg-purple-600 px-6 py-2.5 text-sm font-medium transition-colors hover:bg-purple-700"
+                            className="mt-6 rounded-lg bg-purple-600 px-8 py-3 text-sm font-semibold transition-all hover:bg-purple-700 hover:shadow-[0_0_20px_rgba(147,51,234,0.3)] active:scale-95"
                         >
                             Try Again
                         </button>

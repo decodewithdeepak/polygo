@@ -11,7 +11,7 @@
 
 "use client";
 
-import { useAuth0 } from "@auth0/auth0-react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 import { MessageSquare, Globe, LogOut } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -20,7 +20,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Logo from "@/components/ui/Logo";
 
 export default function Navbar() {
-    const { user, logout } = useAuth0();
+    const { user } = useUser();
     const me = useQuery(api.users.getMe);
     const updateLanguage = useMutation(api.users.updateLanguage);
 
@@ -70,13 +70,13 @@ export default function Navbar() {
                             <AvatarImage src={user.picture} alt={user.name} />
                             <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
                         </Avatar>
-                        <button
-                            onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+                        <a
+                            href="/api/auth/logout"
                             className="flex items-center gap-2 rounded-md bg-zinc-800/80 p-2 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-100 transition-all border border-zinc-700/30"
                             title="Log out"
                         >
                             <LogOut className="h-4 w-4" />
-                        </button>
+                        </a>
                     </div>
                 )}
             </div>
