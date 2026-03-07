@@ -114,7 +114,7 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
                             className="h-7 w-7 rounded-full object-cover"
                         />
                     ) : (
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-cyan-600 text-xs font-semibold text-white">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-700 text-xs font-semibold text-white">
                             {message.sender.name.charAt(0).toUpperCase()}
                         </div>
                     )}
@@ -126,23 +126,23 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
                 <div className="relative flex items-center gap-1">
                     <div
                         className={`relative rounded-2xl px-4 py-2 ${isMyMessage
-                            ? "rounded-br-sm bg-purple-600 text-white"
-                            : "rounded-bl-sm bg-gray-700 text-white"
+                            ? "rounded-br-sm bg-zinc-100 text-zinc-900 shadow-sm"
+                            : "rounded-bl-sm bg-zinc-800 text-white border border-zinc-700/50"
                             }`}
                     >
-                        {/* Nuance Warning Badge */}
+                        {/* Nuance Warning Badge - Simplified */}
                         {message.nuanceFlags?.hasNuance && (
                             <Popover>
                                 <PopoverTrigger asChild>
-                                    <button className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-black shadow-lg hover:bg-amber-400 transition-colors">
-                                        ⚠️
+                                    <button className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-zinc-900 border border-zinc-700 text-[8px] text-white shadow-md hover:scale-110 transition-transform">
+                                        !
                                     </button>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-64 p-3 bg-gray-800 border-amber-500/50 text-white text-xs">
-                                    <p className="font-bold text-amber-400 mb-1">
-                                        Cultural Nuance Detected ({message.nuanceFlags.type})
+                                <PopoverContent className="w-64 p-3 bg-zinc-900 border-zinc-800 text-zinc-100 text-xs shadow-xl">
+                                    <p className="font-bold text-zinc-100 mb-1 border-b border-zinc-800 pb-1">
+                                        Cultural Context ({message.nuanceFlags.type})
                                     </p>
-                                    <p className="leading-relaxed opacity-90">
+                                    <p className="leading-relaxed text-zinc-400">
                                         {message.nuanceFlags.explanation}
                                     </p>
                                 </PopoverContent>
@@ -154,14 +154,14 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
                         </p>
 
                         <div className="mt-1 flex items-center justify-between gap-4">
-                            <p className={`text-[10px] ${isMyMessage ? "text-purple-200" : "text-zinc-400"}`}>
+                            <p className={`text-[9px] ${isMyMessage ? "text-zinc-500" : "text-zinc-500"}`}>
                                 {formattedTime} {isTranslated && "• Translated"}
                             </p>
 
                             {hasTranslation && (
                                 <button
                                     onClick={() => setShowOriginal(!showOriginal)}
-                                    className={`text-[10px] font-bold underline transition-opacity hover:opacity-80 ${isMyMessage ? "text-purple-100" : "text-cyan-400"
+                                    className={`text-[9px] font-bold underline transition-opacity hover:opacity-80 ${isMyMessage ? "text-zinc-900" : "text-zinc-400"
                                         }`}
                                 >
                                     {showOriginal ? "Show Translation" : "Show Original"}

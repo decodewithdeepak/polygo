@@ -24,16 +24,16 @@
 import { useEffect } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { useAuth } from "@clerk/nextjs";
-
-export function usePresence() {
+import { useAuth0 } from "@auth0/auth0-react";
+// ...
+export function usePresence(enabled: boolean = true) {
     const setOnline = useMutation(api.users.setOnline);
     const setOffline = useMutation(api.users.setOffline);
-    const { isLoaded, isSignedIn } = useAuth();
+    const { isAuthenticated, isLoading } = useAuth0();
 
     useEffect(() => {
-        // Don't set up presence until auth is fully loaded and user is signed in
-        if (!isLoaded || !isSignedIn) return;
+        // Don't set up presence until auth is fully loaded, user is authenticated AND enabled
+        if (isLoading || !isAuthenticated || !enabled) return;
 
         // ─── 1. Mark user online when they open the app ──────────────────
         // This runs immediately on mount — the user just arrived
@@ -99,5 +99,5 @@ export function usePresence() {
             document.removeEventListener("visibilitychange", handleVisibilityChange);
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
-    }, [isLoaded, isSignedIn, setOnline, setOffline]);
+    }, [isLoading, isAuthenticated, setOnline, setOffline]);
 }

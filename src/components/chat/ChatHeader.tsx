@@ -33,7 +33,7 @@ export default function ChatHeader({ otherUser }: ChatHeaderProps) {
     const router = useRouter();
 
     return (
-        <div className="flex items-center gap-3 border-b border-gray-700 bg-[#1a1d27] px-4 py-3 md:px-6">
+        <div className="flex items-center gap-3 border-b border-zinc-800 bg-zinc-950 px-4 py-3 md:px-6">
             {/* px-4 on mobile (tighter), md:px-6 on desktop (more breathing room) */}
 
             {/* ===== Mobile Back Button ===== */}
@@ -67,7 +67,7 @@ export default function ChatHeader({ otherUser }: ChatHeaderProps) {
                     />
                 ) : (
                     // Fallback: first letter of name in a colored circle
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-600 text-sm font-semibold text-white">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-800 border border-zinc-700 text-sm font-semibold text-zinc-100">
                         {otherUser.name.charAt(0).toUpperCase()}
                     </div>
                 )}

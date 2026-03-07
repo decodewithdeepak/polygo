@@ -1,5 +1,5 @@
 {
-  "name": "chat-app",
+  "name": "polygo",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,14 +9,13 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.38.1",
-    "@clerk/themes": "^2.4.55",
+    "@auth0/auth0-react": "^2.15.0",
+    "@auth0/nextjs-auth0": "^4.16.0",
     "@google/generative-ai": "^0.24.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "convex": "^1.32.0",
     "date-fns": "^4.1.0",
-    "deepl-node": "^1.24.0",
     "lucide-react": "^0.575.0",
     "next": "16.1.6",
     "next-themes": "^0.4.6",

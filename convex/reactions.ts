@@ -18,7 +18,7 @@ export const toggleReaction = mutation({
 
         const currentUser = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         if (!currentUser) throw new Error("User not found");
@@ -53,6 +53,24 @@ export const getReactions = query({
         messageId: v.id("messages"),
     },
     handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) return [];
+
+        const message = await ctx.db.get(args.messageId);
+        if (!message) return [];
+
+        const conversation = await ctx.db.get(message.conversationId);
+        if (!conversation) return [];
+
+        const currentUser = await ctx.db
+            .query("users")
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
+            .unique();
+
+        if (!currentUser || !conversation.participantIds.includes(currentUser._id)) {
+            return [];
+        }
+
         const reactions = await ctx.db
             .query("reactions")
             .withIndex("by_messageId", (q) => q.eq("messageId", args.messageId))

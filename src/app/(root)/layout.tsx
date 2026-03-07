@@ -21,37 +21,33 @@
  * on navigation, only the page content does.
  */
 
-import { auth } from "@clerk/nextjs/server";
+import { auth0 } from "@/lib/auth0";
 import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import ConversationList from "@/components/sidebar/ConversationList";
 import NewChatButton from "@/components/sidebar/NewChatButton";
 
 export default async function RootAppLayout({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-    // auth() is a server-side function from Clerk that returns the current session
-    // We destructure userId — it will be null if the user is NOT signed in
-    const { userId } = await auth();
+  const session = await auth0.getSession();
 
-    // If there is no userId, the user is not authenticated
-    // redirect() from Next.js sends them to the sign-in page
-    if (!userId) {
-        redirect("/sign-in");
-    }
+  if (!session) {
+    redirect("/auth/login");
+  }
 
-    return (
-        <div className="flex h-screen flex-col bg-[#0f1117]">
-            {/* Navbar is rendered at the top of every protected page */}
-            <Navbar />
+  return (
+    <div className="flex h-screen flex-col bg-[#0f1117]">
+      {/* Navbar is rendered at the top of every protected page */}
+      <Navbar />
 
-            {/* ===== Main Content Area: Sidebar + Chat ===== */}
-            {/* flex-1 + overflow-hidden: fills remaining height below navbar */}
-            <div className="flex flex-1 overflow-hidden">
-                {/* ===== Left Panel: Sidebar ===== */}
-                {/* 
+      {/* ===== Main Content Area: Sidebar + Chat ===== */}
+      {/* flex-1 + overflow-hidden: fills remaining height below navbar */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* ===== Left Panel: Sidebar ===== */}
+        {/* 
                   RESPONSIVE CLASSES:
                   hidden: on mobile (< 768px), sidebar is completely hidden — the
                     conversation list page takes the full screen instead
@@ -69,19 +65,19 @@ export default async function RootAppLayout({
                     2. Sidebar state (scroll position, search text) is preserved
                     3. Works correctly during SSR — no hydration mismatch
                 */}
-                <aside className="relative hidden w-80 flex-col border-r border-gray-800 bg-[#1a1d27] md:flex">
-                    {/* New Chat button — opens user search panel */}
-                    <NewChatButton />
+        <aside className="relative hidden w-80 flex-col border-r border-gray-800 bg-[#1a1d27] md:flex">
+          {/* New Chat button — opens user search panel */}
+          <NewChatButton />
 
-                    {/* Conversation list — shows all active chats */}
-                    {/* flex-1 makes it fill remaining space below the button */}
-                    <div className="mt-2 flex flex-1 flex-col overflow-hidden">
-                        <ConversationList />
-                    </div>
-                </aside>
+          {/* Conversation list — shows all active chats */}
+          {/* flex-1 makes it fill remaining space below the button */}
+          <div className="mt-2 flex flex-1 flex-col overflow-hidden">
+            <ConversationList />
+          </div>
+        </aside>
 
-                {/* ===== Right Panel: Chat Area ===== */}
-                {/* 
+        {/* ===== Right Panel: Chat Area ===== */}
+        {/* 
                   RESPONSIVE BEHAVIOR:
                   flex-1: takes up all remaining horizontal space after the sidebar.
                     On mobile (where sidebar is hidden), this means FULL WIDTH.
@@ -92,10 +88,10 @@ export default async function RootAppLayout({
                   {children}: the actual page content (conversation view or home page)
                   This panel re-renders on navigation; the sidebar does NOT
                 */}
-                <main className="flex flex-1 flex-col overflow-hidden">
-                    {children}
-                </main>
-            </div>
-        </div>
-    );
+        <main className="flex flex-1 flex-col overflow-hidden">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
 }

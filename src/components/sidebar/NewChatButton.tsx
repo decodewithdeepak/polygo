@@ -62,7 +62,7 @@ export default function NewChatButton() {
             {/* ===== Trigger Button ===== */}
             <button
                 onClick={() => setIsOpen(true)}
-                className="mx-3 mt-3 flex items-center justify-center gap-2 rounded-lg bg-purple-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-purple-700"
+                className="mx-3 mt-3 flex items-center justify-center gap-2 rounded-md bg-zinc-100 px-4 py-2.5 text-sm font-bold text-zinc-900 transition-all hover:bg-zinc-200 border border-zinc-200"
             >
                 <MessageSquarePlus className="h-4 w-4" />
                 New Chat
@@ -71,15 +71,15 @@ export default function NewChatButton() {
             {/* ===== User Search Panel (Overlay) ===== */}
             {/* When open, this slides over the conversation list */}
             {isOpen && (
-                <div className="absolute inset-0 z-10 flex flex-col bg-[#1a1d27]">
+                <div className="absolute inset-0 z-10 flex flex-col bg-zinc-950">
                     {/* Panel Header with close button */}
-                    <div className="flex items-center justify-between border-b border-gray-700 px-4 py-3">
-                        <h2 className="text-sm font-semibold text-white">
+                    <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
+                        <h2 className="text-sm font-bold text-zinc-100">
                             New Conversation
                         </h2>
                         <button
                             onClick={() => setIsOpen(false)}
-                            className="rounded-lg p-1 text-zinc-400 transition-colors hover:bg-gray-700/50 hover:text-white"
+                            className="rounded-lg p-1 text-zinc-400 transition-colors hover:bg-zinc-800/50 hover:text-white"
                         >
                             <X className="h-5 w-5" />
                         </button>

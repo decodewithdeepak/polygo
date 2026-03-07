@@ -42,7 +42,7 @@ export const setTyping = mutation({
         // Find the current user's Convex document
         const user = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         if (!user) return null;
@@ -88,7 +88,7 @@ export const clearTyping = mutation({
 
         const user = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         if (!user) return null;
@@ -128,7 +128,7 @@ export const getTyping = query({
 
         const currentUser = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         if (!currentUser) return [];

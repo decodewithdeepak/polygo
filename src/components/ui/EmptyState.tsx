@@ -47,7 +47,7 @@ export default function EmptyState({ icon, title, description, action }: EmptySt
             {action && (
                 <button
                     onClick={action.onClick}
-                    className="mt-2 rounded-lg bg-purple-600 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-700"
+                    className="mt-2 rounded-md bg-zinc-100 px-5 py-2 text-sm font-bold text-zinc-900 transition-all hover:bg-zinc-200 border border-zinc-200"
                 >
                     {action.label}
                 </button>

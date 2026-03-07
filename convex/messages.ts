@@ -38,17 +38,17 @@ export const send = mutation({
     },
     handler: async (ctx, args) => {
         // Step 1: Authenticate the current user
-        // Get the identity from the Clerk JWT token attached to this request.
+        // Get the identity from the Auth0 JWT token attached to this request.
         // If there's no valid token, the user isn't logged in.
         const identity = await ctx.auth.getUserIdentity();
         if (!identity) {
             throw new Error("Not authenticated");
         }
 
-        // Find the current user's document using their Clerk ID
+        // Find the current user's document using their external ID (Auth0 sub)
         const currentUser = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         if (!currentUser) {
@@ -135,7 +135,7 @@ export const deleteMessage = mutation({
 
         const currentUser = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         if (!currentUser) {
@@ -190,7 +190,7 @@ export const getByConversation = query({
         // Find the current user's document
         const currentUser = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         if (!currentUser) {
@@ -295,7 +295,7 @@ export const markAsRead = mutation({
 
         const currentUser = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         if (!currentUser) return null;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Logo from "./ui/Logo";
 
 interface SplashScreenProps {
     onComplete: () => void;
@@ -51,95 +52,90 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                 {/* Logo */}
                 <div
                     style={{
-                        width: 96,
-                        height: 96,
-                        borderRadius: "50%",
-                        background: "linear-gradient(135deg, #6c63ff, #00d4aa)",
-                        boxShadow: "0 0 40px #6c63ff55",
+                        width: 100,
+                        height: 100,
+                        borderRadius: "16px",
+                        background: "#2a2d3d",
+                        border: "1px solid #3f445e",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        animation: "popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+                        animation: "popIn 0.4s ease-out forwards",
                     }}
                 >
-                    <span style={{ fontSize: "3rem", lineHeight: 1 }}>💬</span>
+                    <Logo className="h-16 w-16 text-zinc-100" />
                 </div>
 
                 {/* App Name */}
                 <h1
                     style={{
                         marginTop: 24,
-                        fontSize: "2.25rem",
-                        fontWeight: 800,
-                        background: "linear-gradient(90deg, #6c63ff, #00d4aa)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
+                        fontSize: "2rem",
+                        fontWeight: 700,
+                        color: "#fff",
+                        letterSpacing: "-0.02em",
                         opacity: 0,
-                        animation: "fadeUp 0.5s ease-out 0.3s forwards",
+                        animation: "fadeUp 0.4s ease-out 0.2s forwards",
                     }}
                 >
-                    Chatly
+                    Polygo
                 </h1>
 
                 {/* Subtitle */}
                 <p
                     style={{
-                        marginTop: 8,
-                        color: "#8b8fa8",
-                        fontSize: "1rem",
-                        letterSpacing: "0.05em",
+                        marginTop: 4,
+                        color: "#9ca3af",
+                        fontSize: "0.875rem",
                         opacity: 0,
-                        animation: "fadeUp 0.5s ease-out 0.5s forwards",
+                        animation: "fadeUp 0.4s ease-out 0.4s forwards",
                     }}
                 >
-                    Connect with anyone, instantly
+                    Multilingual Real-time Chat
                 </p>
 
                 {/* Bouncing Dots */}
                 <div
                     style={{
                         display: "flex",
-                        gap: 8,
-                        marginTop: 32,
+                        gap: 12,
+                        marginTop: 40,
                         opacity: 0,
-                        animation: "fadeUp 0.4s ease-out 0.7s forwards",
+                        animation: "fadeUp 0.3s ease-out 0.6s forwards",
                     }}
                 >
-                    {[0.8, 0.95, 1.1].map((delay, i) => (
+                    {[0, 0.1, 0.2].map((delay, i) => (
                         <div
                             key={i}
                             style={{
-                                width: 8,
-                                height: 8,
+                                width: 6,
+                                height: 6,
                                 borderRadius: "50%",
-                                backgroundColor: "#6c63ff",
-                                animation: `bounce 0.6s ease-in-out ${delay}s infinite`,
+                                backgroundColor: "#fff",
+                                animation: `bounce 1s ease-in-out ${delay}s infinite`,
                             }}
                         />
                     ))}
                 </div>
 
-                {/* Progress Bar */}
+                {/* Simple Progress Bar */}
                 <div
                     style={{
                         position: "absolute",
-                        bottom: 56,
-                        width: 176,
-                        height: 3,
-                        backgroundColor: "#2e3350",
-                        borderRadius: 9999,
-                        overflow: "hidden",
+                        bottom: 48,
+                        width: 200,
+                        height: 1,
+                        backgroundColor: "#1f2937",
                         opacity: 0,
-                        animation: "fadeUp 0.4s ease-out 0.7s forwards",
+                        animation: "fadeUp 0.3s ease-out 0.6s forwards",
                     }}
                 >
                     <div
                         style={{
                             height: "100%",
-                            borderRadius: 9999,
-                            background: "linear-gradient(90deg, #6c63ff, #00d4aa)",
+                            backgroundColor: "#fff",
                             width: 0,
-                            animation: "fillBar 2s linear 0.8s forwards",
+                            animation: "fillBar 2s ease-in-out 0.2s forwards",
                         }}
                     />
                 </div>

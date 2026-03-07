@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Chatly",
-  description: "Connect with anyone, instantly",
+  title: "Polygo | Real-time Multilingual Chat",
+  description: "Translate words, preserve meaning.",
 };
 
 export default function RootLayout({

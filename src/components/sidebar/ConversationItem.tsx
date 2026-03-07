@@ -73,7 +73,7 @@ export default function ConversationItem({
                         className="h-11 w-11 rounded-full object-cover"
                     />
                 ) : (
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-cyan-600 text-sm font-semibold text-white">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-zinc-800 border border-zinc-700 text-sm font-semibold text-zinc-100">
                         {otherUser.name.charAt(0).toUpperCase()}
                     </div>
                 )}
@@ -110,7 +110,7 @@ export default function ConversationItem({
                     {/* fully absent from DOM. This avoids an invisible element taking up */}
                     {/* space or being picked up by screen readers. */}
                     {unreadCount > 0 && (
-                        <span className="ml-2 flex h-5 min-w-5 flex-shrink-0 items-center justify-center rounded-full bg-purple-600 px-1 text-[10px] font-bold text-white">
+                        <span className="ml-2 flex h-5 min-w-5 flex-shrink-0 items-center justify-center rounded-full bg-zinc-100 px-1 text-[10px] font-bold text-zinc-900 shadow-sm">
                             {/* 9+ cap prevents layout breaking with very large numbers */}
                             {/* (e.g., "147" would overflow the circle and look broken) */}
                             {unreadCount > 9 ? "9+" : unreadCount}

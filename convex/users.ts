@@ -14,7 +14,7 @@ export const store = mutation({
         // Check if user already exists
         const existingUser = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         if (existingUser) {
@@ -30,7 +30,7 @@ export const store = mutation({
 
         // Insert new user
         const userId = await ctx.db.insert("users", {
-            clerkId: identity.subject,
+            externalId: identity.subject,
             name: identity.name ?? "Unknown",
             email: identity.email ?? "",
             imageUrl: identity.pictureUrl ?? "",
@@ -54,7 +54,7 @@ export const getMe = query({
 
         const user = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         return user;
@@ -72,7 +72,7 @@ export const getAll = query({
 
         const allUsers = await ctx.db.query("users").collect();
 
-        return allUsers.filter((user) => user.clerkId !== identity.subject);
+        return allUsers.filter((user) => user.externalId !== identity.subject);
     },
 });
 
@@ -93,7 +93,7 @@ export const setOnline = mutation({
 
         const user = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         if (!user) return null;
@@ -121,7 +121,7 @@ export const setOffline = mutation({
 
         const user = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         if (!user) return null;
@@ -146,7 +146,7 @@ export const updateLanguage = mutation({
 
         const user = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         if (!user) throw new Error("User not found");

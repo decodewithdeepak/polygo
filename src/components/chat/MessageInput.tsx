@@ -109,7 +109,7 @@ export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping 
     };
 
     return (
-        <div className="border-t border-gray-700 bg-[#1a1d27] p-4">
+        <div className="border-t border-zinc-800 bg-zinc-950 p-4">
             <div className="flex items-end gap-3">
                 {/* Expanding textarea for message composition */}
                 <textarea
@@ -120,7 +120,7 @@ export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping 
                     placeholder="Type a message..."
                     disabled={isSending}
                     rows={1}
-                    className="flex-1 resize-none rounded-xl border border-gray-700 bg-gray-800/50 px-4 py-3 text-sm text-white placeholder-zinc-500 outline-none transition-colors focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 disabled:opacity-50"
+                    className="flex-1 resize-none rounded-md border border-zinc-700 bg-zinc-800/40 px-4 py-3 text-sm text-white placeholder-zinc-500 outline-none transition-all focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 disabled:opacity-50"
                 // resize-none: prevents manual resize handle (we auto-resize instead)
                 // rows={1}: starts as a single line, expands automatically
                 />
@@ -129,7 +129,7 @@ export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping 
                 <button
                     onClick={handleSendMessage}
                     disabled={!messageContent.trim() || isSending}
-                    className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-purple-600 text-white transition-colors hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-900 transition-all hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50 border border-zinc-200"
                 // disabled when: empty message OR currently sending
                 // flex-shrink-0: prevents the button from shrinking when textarea expands
                 >

@@ -43,8 +43,8 @@ export const getOrCreate = mutation({
     },
     handler: async (ctx, args) => {
         // Step 1: Authenticate the current user
-        // Convex gives us the authenticated user from the Clerk JWT.
-        // The `getUserIdentity()` method reads the JWT token that Clerk
+        // Convex gives us the authenticated user from the Auth0 JWT.
+        // The `getUserIdentity()` method reads the JWT token that Auth0
         // attached to the request — this is how Convex knows WHO is calling.
         const identity = await ctx.auth.getUserIdentity();
         if (!identity) {
@@ -52,11 +52,11 @@ export const getOrCreate = mutation({
         }
 
         // Step 2: Find the current user's document in our users table
-        // We match by `clerkId` (which is `identity.subject` from the JWT)
-        // because that's the unique identifier Clerk gives each user.
+        // We match by `externalId` (which is `identity.subject` from the JWT)
+        // because that's the unique identifier Auth0 gives each user.
         const currentUser = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         if (!currentUser) {
@@ -133,7 +133,7 @@ export const getAll = query({
         // Find the current user's document
         const currentUser = await ctx.db
             .query("users")
-            .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
             .unique();
 
         if (!currentUser) {

@@ -2,23 +2,23 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth0 } from "@auth0/auth0-react";
 import SplashScreen from "@/components/SplashScreen";
 
 export default function RootPage() {
     const [showSplash, setShowSplash] = useState(true);
-    const { isSignedIn, isLoaded } = useAuth();
+    const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
     const router = useRouter();
 
     const handleSplashComplete = () => {
         setShowSplash(false);
 
-        if (!isLoaded) return;
+        if (isLoading) return;
 
-        if (isSignedIn) {
+        if (isAuthenticated) {
             router.replace("/conversations");
         } else {
-            router.replace("/sign-in");
+            loginWithRedirect();
         }
     };
 
