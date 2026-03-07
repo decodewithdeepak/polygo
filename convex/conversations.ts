@@ -65,39 +65,30 @@ export const getOrCreate = mutation({
 
         // Step 3: Check if a conversation already exists between these two users
         //
-        // WHY WE CHECK BOTH DIRECTIONS:
-        // When a conversation is created, we store participantIds as
-        // [userA, userB]. But we don't know which order they were stored in.
-        // If Alice started the chat → [alice, bob]
-        // If Bob started the chat → [bob, alice]
-        //
-        // So we need to check ALL conversations and see if BOTH users exist
-        // in the participantIds array, regardless of order.
-        //
-        // NOTE: In a production app with millions of conversations, we'd add
-        // a Convex index on participantIds for faster lookups. For now, we
-        // filter in memory since the dataset is small.
-        const allConversations = await ctx.db.query("conversations").collect();
+        // DETERMINISTIC ORDERING:
+        // We always sort participantIds so that the smaller ID comes first.
+        // This means [alice, bob] and [bob, alice] both become the same
+        // sorted array — preventing duplicates from race conditions where
+        // both users click "new chat" simultaneously.
+        const sortedIds = [currentUser._id, args.participantId].sort();
 
-        const existingConversation = allConversations.find(
-            (conversation) =>
-                conversation.participantIds.includes(currentUser._id) &&
-                conversation.participantIds.includes(args.participantId)
-        );
+        const existingConversation = await ctx.db
+            .query("conversations")
+            .withIndex("by_participantPair", (q) =>
+                q.eq("participantPair", `${sortedIds[0]}|${sortedIds[1]}`)
+            )
+            .unique();
 
         // Step 4: If conversation already exists, return its ID
-        // This avoids creating duplicate conversations between the same two users.
-        // No matter how many times Alice clicks on Bob, they'll always share
-        // the SAME conversation thread.
         if (existingConversation) {
             return existingConversation._id;
         }
 
         // Step 5: No existing conversation found — create a new one
-        // We store both user IDs in the participantIds array.
-        // The order doesn't matter because we always search both directions (Step 3).
+        // participantIds stored in deterministic sorted order.
         const conversationId = await ctx.db.insert("conversations", {
-            participantIds: [currentUser._id, args.participantId],
+            participantIds: sortedIds,
+            participantPair: `${sortedIds[0]}|${sortedIds[1]}`,
         });
 
         return conversationId;
@@ -218,5 +209,28 @@ export const getAll = query({
             const bTime = b.lastMessage?.createdAt ?? 0;
             return bTime - aTime;
         });
+    },
+});
+
+/**
+ * backfillParticipantPairs — One-time migration to populate participantPair
+ * on existing conversations that were created before this field existed.
+ * Run once via Convex dashboard, then delete.
+ */
+export const backfillParticipantPairs = mutation({
+    args: {},
+    handler: async (ctx) => {
+        const all = await ctx.db.query("conversations").collect();
+        let updated = 0;
+        for (const conv of all) {
+            if (!conv.participantPair) {
+                const sorted = [...conv.participantIds].sort();
+                await ctx.db.patch(conv._id, {
+                    participantPair: `${sorted[0]}|${sorted[1]}`,
+                });
+                updated++;
+            }
+        }
+        return { updated };
     },
 });

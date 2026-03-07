@@ -14,7 +14,11 @@ export default defineSchema({
 
     conversations: defineTable({
         participantIds: v.array(v.id("users")),
-    }),
+        // Deterministic key "smallerId|largerId" — enables unique index lookup
+        // to prevent race-condition duplicate conversations.
+        participantPair: v.optional(v.string()),
+    })
+        .index("by_participantPair", ["participantPair"]),
 
     messages: defineTable({
         conversationId: v.id("conversations"),
@@ -25,8 +29,12 @@ export default defineSchema({
         isDeleted: v.optional(v.boolean()),
         deletedAt: v.optional(v.number()),
         // AI-powered fields
-        translations: v.optional(v.any()), // Map<langCode, text>
-        nuanceFlags: v.optional(v.any()),  // { idiomatic: boolean, tone: string, context: string }
+        translations: v.optional(v.record(v.string(), v.string())),
+        nuanceFlags: v.optional(v.object({
+            hasNuance: v.boolean(),
+            type: v.string(),
+            explanation: v.string(),
+        })),
     }).index("by_conversationId", ["conversationId"]),
 
     reactions: defineTable({

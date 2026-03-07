@@ -118,8 +118,12 @@ export const send = mutation({
 export const updateAIResults = mutation({
   args: {
     messageId: v.id("messages"),
-    translations: v.any(),
-    nuanceFlags: v.any(),
+    translations: v.record(v.string(), v.string()),
+    nuanceFlags: v.object({
+      hasNuance: v.boolean(),
+      type: v.string(),
+      explanation: v.string(),
+    }),
   },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.messageId, {

@@ -6,8 +6,7 @@ import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { SmilePlus } from "lucide-react";
-
-const EMOJIS = ["👍", "❤️", "😂", "😮", "😢"];
+import { ALLOWED_EMOJIS } from "../../../convex/shared";
 
 interface ReactionPickerProps {
     messageId: Id<"messages">;
@@ -38,7 +37,7 @@ export default function ReactionPicker({ messageId, isMyMessage }: ReactionPicke
                 side={isMyMessage ? "left" : "right"}
             >
                 <div className="flex gap-1">
-                    {EMOJIS.map((emoji) => (
+                    {ALLOWED_EMOJIS.map((emoji) => (
                         <button
                             key={emoji}
                             onClick={() => handlePick(emoji)}

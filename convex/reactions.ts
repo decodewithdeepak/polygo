@@ -1,7 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
-
-const ALLOWED_EMOJIS = ["👍", "❤️", "😂", "😮", "😢"];
+import { ALLOWED_EMOJIS } from "./shared";
 
 export const toggleReaction = mutation({
     args: {

@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { SUPPORTED_LANGUAGES } from "./shared";
 
 // Store or update the current authenticated user
 export const store = mutation({
@@ -163,6 +164,11 @@ export const updateLanguage = mutation({
       .unique();
 
     if (!user) throw new Error("User not found");
+
+    // Validate against supported language list
+    if (!(SUPPORTED_LANGUAGES as readonly string[]).includes(args.language)) {
+      throw new Error(`Unsupported language: ${args.language}`);
+    }
 
     await ctx.db.patch(user._id, {
       preferredLanguage: args.language,
