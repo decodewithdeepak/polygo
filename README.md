@@ -48,6 +48,29 @@ Tracks user status (offline/online) and active typing states with auto-expiring 
 
 ---
 
+## AceHack 5.0 Submission Details
+
+Polygo was built for **AceHack 5.0** and *targets* the following tracks:
+
+### 1. Best Use of Gemini API
+
+We leveraged **Gemini 2.5 Flash** for high-reliability translations and context-aware cultural nuance detection. Gemini acts as our "Language Specialist," extracting pedagogical tips from conversations to help users learn as they chat.
+
+### 2. Best Use of Auth0
+
+Polygo uses **Auth0** for secure, enterprise-grade authentication. We implemented role-based mutation guards in Convex to ensure that only authorized participants can read or send messages in a conversation.
+
+### 3. Best Hack Built with Google Antigravity
+
+This project was developed entirely within the **Google Antigravity** environment. Antigravity served as a pair-programmer, handling:
+
+- **Complex Architecture Design**: Mapping out the Convex-Sarvam-Google hybrid routing.
+- **Natural Language Refactoring**: Generating utility hooks and complex UI components through speech and text commands.
+- **Context-Aware Debugging**: Instantly identifying and fixing race conditions in the Convex live-subscription logic.
+- **Rapid Documentation**: Generating this comprehensive README and product documentation based on the full codebase context.
+
+---
+
 ## 🛠 Tech Stack
 
 ### Frontend
