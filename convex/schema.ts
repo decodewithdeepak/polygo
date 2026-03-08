@@ -19,6 +19,12 @@ export default defineSchema({
     // Deterministic key "smallerId|largerId" — enables unique index lookup
     // to prevent race-condition duplicate conversations.
     participantPair: v.optional(v.string()),
+    // ─── Group chat fields (all optional — DMs have none of these) ───
+    isGroup: v.optional(v.boolean()),
+    groupName: v.optional(v.string()),
+    groupAdmin: v.optional(v.array(v.id("users"))),
+    createdBy: v.optional(v.id("users")),
+    createdAt: v.optional(v.number()),
   }).index("by_participantPair", ["participantPair"]),
 
   messages: defineTable({

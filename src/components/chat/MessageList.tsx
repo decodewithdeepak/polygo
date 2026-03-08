@@ -39,6 +39,7 @@ interface Message {
 interface MessageListProps {
     messages: Message[];
     currentUserId: Id<"users">;
+    isGroup?: boolean;
 }
 
 /**
@@ -67,7 +68,7 @@ function shouldShowDateDivider(
     return currentDate !== previousDate;
 }
 
-export default function MessageList({ messages, currentUserId }: MessageListProps) {
+export default function MessageList({ messages, currentUserId, isGroup }: MessageListProps) {
     // All scroll logic is encapsulated in the useAutoScroll hook —
     // this component doesn't need to know about scroll positions,
     // thresholds, or timing. It just uses the returned refs and state.
@@ -122,6 +123,7 @@ export default function MessageList({ messages, currentUserId }: MessageListProp
                                     message={message}
                                     isMyMessage={message.senderId === currentUserId}
                                     currentUserId={currentUserId}
+                                    isGroup={isGroup}
                                 />
                             </div>
                         );

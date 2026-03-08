@@ -4,7 +4,6 @@ import { api } from "./_generated/api";
 import { translateWithGoogle, generateWithGemini } from "./google";
 import { translateWithSarvam, generateTipWithSarvam, generateWithSarvam } from "./sarvam";
 import { SARVAM_LANG_CODES } from "./shared";
-import { SARVAM_LANG_CODES } from "./shared";
 
 // All language names for tip generation and routing
 const ALL_LANG_NAMES: Record<string, string> = {

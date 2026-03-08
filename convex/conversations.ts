@@ -149,6 +149,47 @@ export const getAll = query({
         // This is much faster when there are multiple conversations.
         const conversationsWithDetails = await Promise.all(
             myConversations.map(async (conversation) => {
+                // ─── Group Conversation ───────────────────────────────────
+                if (conversation.isGroup) {
+                    const lastMessage = await ctx.db
+                        .query("messages")
+                        .withIndex("by_conversationId", (q) =>
+                            q.eq("conversationId", conversation._id)
+                        )
+                        .order("desc")
+                        .first();
+
+                    const allMessages = await ctx.db
+                        .query("messages")
+                        .withIndex("by_conversationId", (q) =>
+                            q.eq("conversationId", conversation._id)
+                        )
+                        .collect();
+
+                    const unreadCount = allMessages.filter(
+                        (msg) => msg.senderId !== currentUser._id && msg.read === false
+                    ).length;
+
+                    // Get sender name for last message preview
+                    let lastMessageSenderName: string | undefined;
+                    if (lastMessage) {
+                        const sender = await ctx.db.get(lastMessage.senderId);
+                        lastMessageSenderName = sender?.name;
+                    }
+
+                    return {
+                        conversation,
+                        otherUser: null,
+                        lastMessage,
+                        lastMessageSenderName,
+                        unreadCount,
+                        isGroup: true as const,
+                        groupName: conversation.groupName ?? "Group",
+                        memberCount: conversation.participantIds.length,
+                    };
+                }
+
+                // ─── DM Conversation (existing logic) ────────────────────
                 // Find the OTHER participant's ID
                 // (the one that isn't the current user)
                 const otherUserId = conversation.participantIds.find(
@@ -195,7 +236,11 @@ export const getAll = query({
                     conversation,
                     otherUser,
                     lastMessage,
+                    lastMessageSenderName: undefined,
                     unreadCount,
+                    isGroup: false as const,
+                    groupName: undefined,
+                    memberCount: undefined,
                 };
             })
         );

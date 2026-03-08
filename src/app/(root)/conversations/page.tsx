@@ -1,6 +1,7 @@
 import { MessageSquare } from "lucide-react";
 import ConversationList from "@/components/sidebar/ConversationList";
 import NewChatButton from "@/components/sidebar/NewChatButton";
+import NewGroupButton from "@/components/sidebar/NewGroupButton";
 
 export default function HomePage() {
     return (
@@ -14,6 +15,7 @@ export default function HomePage() {
             <div className="flex flex-1 flex-col overflow-hidden md:hidden">
                 {/* Reusing the same components from the sidebar for consistency */}
                 <NewChatButton />
+                <NewGroupButton />
                 <div className="mt-2 flex flex-1 flex-col overflow-hidden">
                     <ConversationList />
                 </div>

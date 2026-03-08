@@ -3,6 +3,7 @@
 import Navbar from "@/components/Navbar";
 import ConversationList from "@/components/sidebar/ConversationList";
 import NewChatButton from "@/components/sidebar/NewChatButton";
+import NewGroupButton from "@/components/sidebar/NewGroupButton";
 
 export default function RootAppLayout({
   children,
@@ -19,6 +20,7 @@ export default function RootAppLayout({
       <div className="flex flex-1 overflow-hidden">
         <aside className="relative hidden w-80 flex-col border-r border-zinc-800 bg-zinc-950 md:flex">
           <NewChatButton />
+          <NewGroupButton />
           <div className="mt-2 flex flex-1 flex-col overflow-hidden">
             <ConversationList />
           </div>

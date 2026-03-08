@@ -88,21 +88,35 @@ export const send = mutation({
       isDeleted: false,
     });
 
-    // Step 5: Trigger AI translation only if the receiver speaks a different language.
-    // Look up the other participant's preferred language.
-    const receiverId = conversation.participantIds.find(
+    // Step 5: Trigger AI translation.
+    // For DMs: translate for the single receiver.
+    // For groups: translate for each unique language among other participants.
+    const senderLang = currentUser.preferredLanguage || "en";
+    const otherParticipantIds = conversation.participantIds.filter(
       (id) => id !== currentUser._id
     );
-    const receiver = receiverId ? await ctx.db.get(receiverId) : null;
-    const senderLang = currentUser.preferredLanguage || "en";
-    const receiverLang = receiver?.preferredLanguage || "en";
 
-    // Call AI to handle translation & learning tips
+    // Collect unique languages of all other participants
+    const otherUsers = await Promise.all(
+      otherParticipantIds.map((id) => ctx.db.get(id))
+    );
+    const targetLangs = [
+      ...new Set(
+        otherUsers
+          .map((u) => u?.preferredLanguage || "en")
+          .filter((lang) => lang !== senderLang)
+      ),
+    ];
+
+    // Use the first target language for the AI call (tip generation).
+    // Translations for all target languages happen inside processMessageAI.
+    const primaryReceiverLang = targetLangs[0] || senderLang;
+
     await ctx.scheduler.runAfter(0, (api as any).ai.processMessageAI, {
       messageId,
       text: args.content,
       senderLang: senderLang,
-      receiverLang: receiverLang,
+      receiverLang: primaryReceiverLang,
     });
 
     return messageId;

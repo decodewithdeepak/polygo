@@ -52,10 +52,13 @@ export default function ConversationList() {
     // ─── Filter Conversations by Search Query ─────────────────────────────
     // Case-insensitive match on the other user's name.
     // We filter the already-fetched array — no server call needed.
-    const filteredConversations = conversations.filter(({ otherUser }) => {
-        if (!otherUser) return false;
-        if (!searchQuery.trim()) return true;
-        return otherUser.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const filteredConversations = conversations.filter((item) => {
+        const searchTerm = searchQuery.trim().toLowerCase();
+        if (!searchTerm) return true;
+        if (item.isGroup) {
+            return (item.groupName ?? "Group").toLowerCase().includes(searchTerm);
+        }
+        return item.otherUser?.name.toLowerCase().includes(searchTerm) ?? false;
     });
 
     // Close search and clear the query
@@ -125,19 +128,38 @@ export default function ConversationList() {
                             No conversations found
                         </p>
                     ) : (
-                        filteredConversations.map(({ conversation, otherUser, lastMessage, unreadCount }) => {
-                            if (!otherUser) return null;
+                        filteredConversations.map((item) => {
+                            const { conversation, lastMessage, unreadCount } = item;
+
+                            // Skip DMs with no other user
+                            if (!item.isGroup && !item.otherUser) return null;
 
                             const isActive = pathname === `/conversations/${conversation._id}`;
+
+                            if (item.isGroup) {
+                                return (
+                                    <ConversationItem
+                                        key={conversation._id}
+                                        conversationId={conversation._id}
+                                        isGroup
+                                        groupName={item.groupName}
+                                        memberCount={item.memberCount}
+                                        lastMessage={lastMessage}
+                                        lastMessageSenderName={item.lastMessageSenderName}
+                                        isActive={isActive}
+                                        unreadCount={unreadCount}
+                                    />
+                                );
+                            }
 
                             return (
                                 <ConversationItem
                                     key={conversation._id}
                                     conversationId={conversation._id}
                                     otherUser={{
-                                        name: otherUser.name,
-                                        imageUrl: otherUser.imageUrl,
-                                        isOnline: otherUser.isOnline,
+                                        name: item.otherUser!.name,
+                                        imageUrl: item.otherUser!.imageUrl,
+                                        isOnline: item.otherUser!.isOnline,
                                     }}
                                     lastMessage={lastMessage}
                                     isActive={isActive}

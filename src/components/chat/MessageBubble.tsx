@@ -40,9 +40,10 @@ interface MessageBubbleProps {
     };
     isMyMessage: boolean;
     currentUserId: Id<"users">;
+    isGroup?: boolean;
 }
 
-export default function MessageBubble({ message, isMyMessage, currentUserId }: MessageBubbleProps) {
+export default function MessageBubble({ message, isMyMessage, currentUserId, isGroup }: MessageBubbleProps) {
     const deleteMessage = useMutation(api.messages.deleteMessage);
     const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -150,6 +151,12 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
 
             {/* ===== Message Bubble ===== */}
             <div className="max-w-[70%] group relative">
+                {/* Sender name — only in group chats, only for others' messages */}
+                {isGroup && !isMyMessage && (
+                    <p className="mb-0.5 ml-1 text-[11px] font-medium text-zinc-500">
+                        {message.sender.name}
+                    </p>
+                )}
                 <div className="relative flex items-center gap-1">
                     <div
                         className={`relative rounded-2xl px-4 py-2 ${isMyMessage

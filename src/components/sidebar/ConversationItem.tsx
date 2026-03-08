@@ -17,27 +17,37 @@ import Image from "next/image";
 import { Id } from "../../../convex/_generated/dataModel";
 import { formatMessageTime } from "@/lib/utils/formatTime";
 import OnlineIndicator from "../ui/OnlineIndicator";
+import { Users } from "lucide-react";
 
 interface ConversationItemProps {
     conversationId: Id<"conversations">;
-    otherUser: {
+    // DM props
+    otherUser?: {
         name: string;
         imageUrl: string;
         isOnline: boolean;
     };
+    // Group props
+    isGroup?: boolean;
+    groupName?: string;
+    memberCount?: number;
+    lastMessageSenderName?: string;
+    // Shared
     lastMessage: {
         content: string;
         createdAt: number;
     } | null;
     isActive: boolean;
-    // unreadCount: number of unread messages from the other person.
-    // Computed in the backend (conversations.getAll) — not fetched separately.
     unreadCount: number;
 }
 
 export default function ConversationItem({
     conversationId,
     otherUser,
+    isGroup,
+    groupName,
+    memberCount,
+    lastMessageSenderName,
     lastMessage,
     isActive,
     unreadCount,
@@ -47,6 +57,19 @@ export default function ConversationItem({
     // Timestamp formatting is now handled by the shared formatMessageTime utility
     // Consistent formatting across sidebar preview and message bubbles
 
+    // Shared display values — group vs DM
+    const displayName = isGroup ? (groupName ?? "Group") : (otherUser?.name ?? "Unknown");
+    const avatarLetter = displayName.charAt(0).toUpperCase();
+    const avatarUrl = isGroup ? undefined : otherUser?.imageUrl;
+    const isOnline = isGroup ? false : (otherUser?.isOnline ?? false);
+
+    // Last message preview for groups includes sender name
+    const lastMessagePreview = lastMessage
+        ? isGroup && lastMessageSenderName
+            ? `${lastMessageSenderName.split(" ")[0]}: ${lastMessage.content}`
+            : lastMessage.content
+        : "No messages yet";
+
     return (
         <div
             onClick={() => router.push(`/conversations/${conversationId}`)}
@@ -54,19 +77,13 @@ export default function ConversationItem({
                 ? "bg-zinc-800"
                 : "hover:bg-zinc-800/50"
                 }`}
-        // isActive: highlights the currently open conversation so the user
-        // knows which chat they're viewing — important for spatial awareness
         >
-            {/* ===== Avatar with Online Indicator ===== */}
+            {/* ===== Avatar ===== */}
             <div className="relative flex-shrink-0">
-                {otherUser.imageUrl ? (
-                    // Next.js Image automatically optimizes format (WebP)
-                    // and prevents layout shift with explicit width/height.
-                    // `priority` disables lazy loading for above-the-fold images —
-                    // sidebar avatars are visible on first paint (LCP elements).
+                {avatarUrl ? (
                     <Image
-                        src={otherUser.imageUrl}
-                        alt={otherUser.name}
+                        src={avatarUrl}
+                        alt={displayName}
                         width={44}
                         height={44}
                         priority
@@ -74,24 +91,28 @@ export default function ConversationItem({
                     />
                 ) : (
                     <div className="flex h-11 w-11 items-center justify-center rounded-full bg-zinc-800 border border-zinc-700 text-sm font-semibold text-zinc-100">
-                        {otherUser.name.charAt(0).toUpperCase()}
+                        {isGroup ? (
+                            <Users className="h-5 w-5 text-zinc-400" />
+                        ) : (
+                            avatarLetter
+                        )}
                     </div>
                 )}
 
-                {/* Online status — uses shared OnlineIndicator */}
-                <span className="absolute bottom-0 right-0 rounded-full border-2 border-zinc-950">
-                    <OnlineIndicator isOnline={otherUser.isOnline} size="md" />
-                </span>
+                {/* Online indicator — only for DMs */}
+                {!isGroup && (
+                    <span className="absolute bottom-0 right-0 rounded-full border-2 border-zinc-950">
+                        <OnlineIndicator isOnline={isOnline} size="md" />
+                    </span>
+                )}
             </div>
 
             {/* ===== Conversation Info (Name + Last Message) ===== */}
             <div className="flex-1 overflow-hidden">
                 <div className="flex items-center justify-between">
                     <h3 className="truncate text-sm font-semibold text-white">
-                        {otherUser.name}
+                        {displayName}
                     </h3>
-
-                    {/* Timestamp of the last message */}
                     {lastMessage && (
                         <span className="ml-2 flex-shrink-0 text-[11px] text-zinc-500">
                             {formatMessageTime(lastMessage.createdAt)}
@@ -100,19 +121,11 @@ export default function ConversationItem({
                 </div>
 
                 <div className="flex items-center justify-between">
-                    {/* Last message preview — truncated to one line */}
                     <p className="truncate text-xs text-zinc-400">
-                        {lastMessage?.content ?? "No messages yet"}
+                        {lastMessagePreview}
                     </p>
-
-                    {/* Unread message badge */}
-                    {/* Don't render the badge element at all when zero — not just hidden, */}
-                    {/* fully absent from DOM. This avoids an invisible element taking up */}
-                    {/* space or being picked up by screen readers. */}
                     {unreadCount > 0 && (
                         <span className="ml-2 flex h-5 min-w-5 flex-shrink-0 items-center justify-center rounded-full bg-zinc-100 px-1 text-[10px] font-bold text-zinc-900 shadow-sm">
-                            {/* 9+ cap prevents layout breaking with very large numbers */}
-                            {/* (e.g., "147" would overflow the circle and look broken) */}
                             {unreadCount > 9 ? "9+" : unreadCount}
                         </span>
                     )}

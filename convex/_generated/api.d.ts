@@ -11,6 +11,7 @@
 import type * as ai from "../ai.js";
 import type * as conversations from "../conversations.js";
 import type * as google from "../google.js";
+import type * as groups from "../groups.js";
 import type * as messages from "../messages.js";
 import type * as reactions from "../reactions.js";
 import type * as sarvam from "../sarvam.js";
@@ -28,6 +29,7 @@ declare const fullApi: ApiFromModules<{
   ai: typeof ai;
   conversations: typeof conversations;
   google: typeof google;
+  groups: typeof groups;
   messages: typeof messages;
   reactions: typeof reactions;
   sarvam: typeof sarvam;
