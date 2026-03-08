@@ -159,7 +159,7 @@ export default function ConversationPage({ params }: ConversationPageProps) {
                     recentMessages={(messages || [])
                         .filter((m) => !m.isDeleted)
                         .slice(-6)
-                        .map((m) => ({ content: m.content, isFromMe: m.senderId === currentUser._id }))
+                        .map((m) => ({ content: m.content, isFromMe: m.senderId === currentUser._id, senderName: m.sender?.name }))
                     }
                 />
             </div>

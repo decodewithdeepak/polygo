@@ -108,16 +108,28 @@ export const send = mutation({
       ),
     ];
 
-    // Use the first target language for the AI call (tip generation).
-    // Translations for all target languages happen inside processMessageAI.
-    const primaryReceiverLang = targetLangs[0] || senderLang;
+    // Schedule an AI call for EACH unique target language.
+    // In a group with Bengali, Hindi, and English speakers,
+    // a message in English triggers translations to bn and hi separately.
+    for (const targetLang of targetLangs) {
+      await ctx.scheduler.runAfter(0, (api as any).ai.processMessageAI, {
+        messageId,
+        text: args.content,
+        senderLang: senderLang,
+        receiverLang: targetLang,
+      });
+    }
 
-    await ctx.scheduler.runAfter(0, (api as any).ai.processMessageAI, {
-      messageId,
-      text: args.content,
-      senderLang: senderLang,
-      receiverLang: primaryReceiverLang,
-    });
+    // If no translation needed (everyone speaks the same language),
+    // still run once for learning tips.
+    if (targetLangs.length === 0) {
+      await ctx.scheduler.runAfter(0, (api as any).ai.processMessageAI, {
+        messageId,
+        text: args.content,
+        senderLang: senderLang,
+        receiverLang: senderLang,
+      });
+    }
 
     return messageId;
   },
@@ -138,8 +150,16 @@ export const updateAIResults = mutation({
     }),
   },
   handler: async (ctx, args) => {
+    // Merge new translations with existing ones (important for groups
+    // where multiple AI calls produce translations for different languages)
+    const existing = await ctx.db.get(args.messageId);
+    const mergedTranslations = {
+      ...(existing?.translations ?? {}),
+      ...args.translations,
+    };
+
     await ctx.db.patch(args.messageId, {
-      translations: args.translations,
+      translations: mergedTranslations,
       nuanceFlags: args.nuanceFlags,
     });
   },

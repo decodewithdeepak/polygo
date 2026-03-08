@@ -155,6 +155,9 @@ export const leaveGroup = mutation({
     if (!conversation || !conversation.isGroup) {
       throw new Error("Group not found");
     }
+    if (!conversation.participantIds.includes(currentUser._id)) {
+      throw new Error("You are not a member of this group");
+    }
 
     const updatedIds = conversation.participantIds.filter(
       (id) => id !== currentUser._id,

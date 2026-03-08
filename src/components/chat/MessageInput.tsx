@@ -52,7 +52,7 @@ interface MessageInputProps {
     onTyping?: () => void;
     onStoppedTyping?: () => void;
     // Recent messages for AI contextual reply
-    recentMessages?: { content: string; isFromMe: boolean }[];
+    recentMessages?: { content: string; isFromMe: boolean; senderName?: string }[];
 }
 
 export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping, recentMessages }: MessageInputProps) {

@@ -168,7 +168,7 @@ export const processMessageAI = action({
 export const generateContextualReply = action({
   args: {
     recentMessages: v.array(
-      v.object({ content: v.string(), isFromMe: v.boolean() }),
+      v.object({ content: v.string(), isFromMe: v.boolean(), senderName: v.optional(v.string()) }),
     ),
     userLang: v.string(),
   },
@@ -176,7 +176,7 @@ export const generateContextualReply = action({
     const langName = ALL_LANG_NAMES[args.userLang] || "English";
     const context = args.recentMessages
       .slice(-6)
-      .map((m) => `${m.isFromMe ? "Me" : "Other"}: ${m.content}`)
+      .map((m) => `${m.isFromMe ? "Me" : (m.senderName || "Other")}: ${m.content}`)
       .join("\n");
 
     const prompt = `You are a smart chat assistant. Based on this conversation, write a natural, friendly reply in ${langName}. Output ONLY the reply text — no quotes, no labels, no explanations. Keep it to 1–2 sentences.\n\nConversation:\n${context}\n\nReply in ${langName}:`;
