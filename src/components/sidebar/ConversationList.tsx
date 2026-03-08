@@ -84,7 +84,7 @@ export default function ConversationList() {
                 <h2 className="text-sm font-semibold text-zinc-300">Chats</h2>
                 <button
                     onClick={() => setIsSearchOpen(!isSearchOpen)}
-                    className="flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-gray-700/50"
+                    className="flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-zinc-700/50"
                     title="Search conversations"
                 >
                     <Search className="h-4 w-4 text-zinc-400" />
@@ -104,7 +104,7 @@ export default function ConversationList() {
                             placeholder="Search by name..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full rounded-lg border border-gray-700 bg-[#0f1117] py-2 pl-9 pr-8 text-sm text-white placeholder-zinc-500 outline-none transition-colors focus:border-purple-500"
+                            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 py-2 pl-9 pr-8 text-sm text-white placeholder-zinc-500 outline-none transition-colors focus:border-zinc-500"
                         />
                         {/* Close button — collapses search and clears the query */}
                         <button

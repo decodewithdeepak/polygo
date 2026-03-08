@@ -56,7 +56,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
-                    background: "#0f1117",
+                    background: "#09090b",
                 }}
             >
                 {/* Logo */}
@@ -65,7 +65,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                         width: 100,
                         height: 100,
                         borderRadius: "16px",
-                        background: "#2a2d3d",
+                        background: "#27272a",
                         border: "1px solid #3f445e",
                         display: "flex",
                         alignItems: "center",

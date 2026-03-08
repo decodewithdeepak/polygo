@@ -80,7 +80,7 @@ export default class ErrorBoundary extends React.Component<
             // Uses the same dark theme styling as the rest of the app so it
             // doesn't feel jarring or disconnected.
             return (
-                <div className="flex h-screen flex-col items-center justify-center bg-[#0f1117] text-white">
+                <div className="flex h-screen flex-col items-center justify-center bg-zinc-950 text-white">
                     <div className="flex flex-col items-center gap-4 text-center">
                         {/* Visual indicator — emoji is universally understood */}
                         <span className="text-5xl">😵</span>
@@ -110,7 +110,7 @@ export default class ErrorBoundary extends React.Component<
 
                         <button
                             onClick={this.handleReset}
-                            className="mt-6 rounded-lg bg-purple-600 px-8 py-3 text-sm font-semibold transition-all hover:bg-purple-700 hover:shadow-[0_0_20px_rgba(147,51,234,0.3)] active:scale-95"
+                            className="mt-6 rounded-lg bg-zinc-100 text-zinc-900 px-8 py-3 text-sm font-semibold transition-all hover:bg-white active:scale-95"
                         >
                             Try Again
                         </button>

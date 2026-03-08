@@ -4,51 +4,51 @@ import { useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { Globe, ArrowRight, Check, Sparkles } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import Logo from "@/components/ui/Logo";
 
 const LANGUAGE_GROUPS = [
     {
         label: "Indic Languages",
         languages: [
-            { code: "en", name: "English", native: "English", flag: "🇬🇧" },
-            { code: "hi", name: "Hindi", native: "हिन्दी", flag: "🇮🇳" },
-            { code: "bn", name: "Bengali", native: "বাংলা", flag: "🇧🇩" },
-            { code: "ta", name: "Tamil", native: "தமிழ்", flag: "🇮🇳" },
-            { code: "te", name: "Telugu", native: "తెలుగు", flag: "🇮🇳" },
-            { code: "mr", name: "Marathi", native: "मराठी", flag: "🇮🇳" },
-            { code: "gu", name: "Gujarati", native: "ગુજરાતી", flag: "🇮🇳" },
-            { code: "kn", name: "Kannada", native: "ಕನ್ನಡ", flag: "🇮🇳" },
-            { code: "ml", name: "Malayalam", native: "മലയാളം", flag: "🇮🇳" },
-            { code: "pa", name: "Punjabi", native: "ਪੰਜਾਬੀ", flag: "🇮🇳" },
-            { code: "ur", name: "Urdu", native: "اردو", flag: "🇵🇰" },
-            { code: "or", name: "Odia", native: "ଓଡ଼ିଆ", flag: "🇮🇳" },
-            { code: "as", name: "Assamese", native: "অসমীয়া", flag: "🇮🇳" },
-            { code: "mai", name: "Maithili", native: "मैथिली", flag: "🇮🇳" },
-            { code: "ne", name: "Nepali", native: "नेपाली", flag: "🇳🇵" },
-            { code: "sa", name: "Sanskrit", native: "संस्कृतम्", flag: "🇮🇳" },
-            { code: "kok", name: "Konkani", native: "कोंकणी", flag: "🇮🇳" },
-            { code: "doi", name: "Dogri", native: "डोगरी", flag: "🇮🇳" },
-            { code: "sd", name: "Sindhi", native: "سنڌي", flag: "🇮🇳" },
-            { code: "sat", name: "Santali", native: "ᱥᱟᱱᱛᱟᱲᱤ", flag: "🇮🇳" },
-            { code: "ks", name: "Kashmiri", native: "कॉशुर", flag: "🇮🇳" },
-            { code: "mni", name: "Manipuri", native: "মৈতৈলোন্", flag: "🇮🇳" },
-            { code: "brx", name: "Bodo", native: "बड़ो", flag: "🇮🇳" },
+            { code: "en", name: "English", native: "English" },
+            { code: "hi", name: "Hindi", native: "हिन्दी" },
+            { code: "bn", name: "Bengali", native: "বাংলা" },
+            { code: "ta", name: "Tamil", native: "தமிழ்" },
+            { code: "te", name: "Telugu", native: "తెలుగు" },
+            { code: "mr", name: "Marathi", native: "मराठी" },
+            { code: "gu", name: "Gujarati", native: "ગુજરાતી" },
+            { code: "kn", name: "Kannada", native: "ಕನ್ನಡ" },
+            { code: "ml", name: "Malayalam", native: "മലയാളം" },
+            { code: "pa", name: "Punjabi", native: "ਪੰਜਾਬੀ" },
+            { code: "ur", name: "Urdu", native: "اردو" },
+            { code: "or", name: "Odia", native: "ଓଡ଼ିଆ" },
+            { code: "as", name: "Assamese", native: "অসমীয়া" },
+            { code: "mai", name: "Maithili", native: "मैथिली" },
+            { code: "ne", name: "Nepali", native: "नेपाली" },
+            { code: "sa", name: "Sanskrit", native: "संस्कृतम्" },
+            { code: "kok", name: "Konkani", native: "कोंकणी" },
+            { code: "doi", name: "Dogri", native: "डोगरी" },
+            { code: "sd", name: "Sindhi", native: "سنڌي" },
+            { code: "sat", name: "Santali", native: "ᱥᱟᱱᱛᱟᱲᱤ" },
+            { code: "ks", name: "Kashmiri", native: "कॉशुर" },
+            { code: "mni", name: "Manipuri", native: "মৈতৈলোন্" },
+            { code: "brx", name: "Bodo", native: "बड़ो" },
         ],
     },
     {
         label: "Foreign Languages",
         languages: [
-            { code: "ja", name: "Japanese", native: "日本語", flag: "🇯🇵" },
-            { code: "es", name: "Spanish", native: "Español", flag: "🇪🇸" },
-            { code: "fr", name: "French", native: "Français", flag: "🇫🇷" },
-            { code: "de", name: "German", native: "Deutsch", flag: "🇩🇪" },
-            { code: "zh", name: "Chinese", native: "中文", flag: "🇨🇳" },
-            { code: "ko", name: "Korean", native: "한국어", flag: "🇰🇷" },
-            { code: "pt", name: "Portuguese", native: "Português", flag: "🇧🇷" },
-            { code: "ru", name: "Russian", native: "Русский", flag: "🇷🇺" },
-            { code: "ar", name: "Arabic", native: "العربية", flag: "🇸🇦" },
-            { code: "it", name: "Italian", native: "Italiano", flag: "🇮🇹" },
+            { code: "ja", name: "Japanese", native: "日本語" },
+            { code: "es", name: "Spanish", native: "Español" },
+            { code: "fr", name: "French", native: "Français" },
+            { code: "de", name: "German", native: "Deutsch" },
+            { code: "zh", name: "Chinese", native: "中文" },
+            { code: "ko", name: "Korean", native: "한국어" },
+            { code: "pt", name: "Portuguese", native: "Português" },
+            { code: "ru", name: "Russian", native: "Русский" },
+            { code: "ar", name: "Arabic", native: "العربية" },
+            { code: "it", name: "Italian", native: "Italiano" },
         ],
     },
 ];
@@ -61,8 +61,8 @@ export default function OnboardingPage() {
 
     if (isLoading) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-[#0a0b10]">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
+            <div className="flex min-h-screen items-center justify-center bg-zinc-950">
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-zinc-500 border-t-transparent" />
             </div>
         );
     }
@@ -84,65 +84,57 @@ export default function OnboardingPage() {
     };
 
     return (
-        <div className="relative min-h-screen w-full overflow-hidden bg-[#0a0b10] text-white font-sans">
-            {/* Background effects */}
-            <div className="absolute -top-[10%] -left-[10%] h-150 w-150 rounded-full bg-purple-600/10 blur-[120px]" />
-            <div className="absolute top-[40%] -right-[5%] h-100 w-100 rounded-full bg-blue-600/10 blur-[120px]" />
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[40px_40px]" />
-
-            <div className="relative z-10 mx-auto flex min-h-screen max-w-5xl flex-col px-6 py-10">
+        <div className="min-h-screen w-full bg-zinc-950 text-white font-sans">
+            <div className="mx-auto flex min-h-screen max-w-4xl flex-col px-6 py-8">
                 {/* Header */}
-                <div className="flex items-center gap-2.5 mb-16">
-                    <Logo className="h-6 w-6 text-zinc-100" />
-                    <span className="text-lg font-bold tracking-tight text-white">Polygo</span>
+                <div className="flex items-center gap-2 mb-12">
+                    <Logo className="h-5 w-5 text-zinc-300" />
+                    <span className="text-sm font-semibold tracking-tight text-zinc-100">Polygo</span>
                 </div>
 
                 {/* Hero */}
-                <div className="mb-12 text-center">
-                    <div className="mx-auto mb-5 flex w-fit items-center gap-2 rounded-full border border-purple-500/20 bg-purple-500/5 px-4 py-1.5 text-xs font-medium text-purple-400">
-                        <Sparkles className="h-3 w-3" />
-                        <span>Welcome, {user.name || user.email}!</span>
-                    </div>
-                    <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">
-                        Choose your <span className="bg-linear-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">preferred language</span>
+                <div className="mb-10">
+                    <p className="mb-2 text-xs uppercase tracking-widest text-zinc-500">
+                        Welcome, {user.name || user.email}
+                    </p>
+                    <h1 className="text-2xl font-semibold tracking-tight text-zinc-100 md:text-3xl">
+                        Choose your preferred language
                     </h1>
-                    <p className="mx-auto mt-3 max-w-lg text-sm text-zinc-500">
-                        Messages from others will be translated into this language. You can always change it later.
+                    <p className="mt-2 max-w-md text-sm text-zinc-500">
+                        Messages from others will be translated into this language. You can change it anytime.
                     </p>
                 </div>
 
                 {/* Language Groups */}
-                <div className="flex-1 space-y-10">
+                <div className="flex-1 space-y-8">
                     {LANGUAGE_GROUPS.map((group) => (
                         <div key={group.label}>
-                            <h2 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-zinc-500">
-                                <Globe className="h-3.5 w-3.5" />
+                            <h2 className="mb-3 text-xs font-medium uppercase tracking-widest text-zinc-500">
                                 {group.label}
                             </h2>
-                            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                            <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                                 {group.languages.map((lang) => {
                                     const isSelected = selected === lang.code;
                                     return (
                                         <button
                                             key={lang.code}
                                             onClick={() => setSelected(lang.code)}
-                                            className={`group relative flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all duration-200 ${isSelected
-                                                    ? "border-purple-500/60 bg-purple-500/10 shadow-[0_0_20px_rgba(168,85,247,0.15)]"
-                                                    : "border-zinc-800 bg-zinc-900/40 hover:border-zinc-600 hover:bg-zinc-800/60"
+                                            className={`flex items-center gap-2.5 rounded-lg border px-3 py-2.5 text-left transition-colors ${isSelected
+                                                    ? "border-zinc-500 bg-zinc-800"
+                                                    : "border-zinc-800 bg-zinc-900/50 hover:border-zinc-700 hover:bg-zinc-900"
                                                 }`}
                                         >
-                                            <span className="text-xl leading-none">{lang.flag}</span>
                                             <div className="min-w-0 flex-1">
-                                                <div className={`text-sm font-medium truncate ${isSelected ? "text-purple-200" : "text-zinc-200"}`}>
+                                                <div className={`text-sm font-medium truncate ${isSelected ? "text-zinc-100" : "text-zinc-300"}`}>
                                                     {lang.name}
                                                 </div>
-                                                <div className={`text-xs truncate ${isSelected ? "text-purple-400/70" : "text-zinc-600"}`}>
+                                                <div className="text-xs truncate text-zinc-600">
                                                     {lang.native}
                                                 </div>
                                             </div>
                                             {isSelected && (
-                                                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-purple-500">
-                                                    <Check className="h-3 w-3 text-white" />
+                                                <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-zinc-100">
+                                                    <Check className="h-2.5 w-2.5 text-zinc-900" />
                                                 </div>
                                             )}
                                         </button>
@@ -154,24 +146,24 @@ export default function OnboardingPage() {
                 </div>
 
                 {/* Continue Button */}
-                <div className="sticky bottom-0 mt-10 flex justify-center pb-8 pt-6 bg-linear-to-t from-[#0a0b10] via-[#0a0b10] to-transparent">
+                <div className="sticky bottom-0 mt-8 flex justify-center pb-6 pt-6 bg-zinc-950">
                     <button
                         onClick={handleContinue}
                         disabled={!selected || saving}
-                        className={`group flex h-14 items-center justify-center gap-2 rounded-full px-10 text-base font-bold transition-all ${selected
-                                ? "bg-white text-black hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_30px_rgba(255,255,255,0.1)]"
+                        className={`group flex items-center gap-2 rounded-md px-6 py-2.5 text-sm font-medium transition-colors ${selected
+                                ? "bg-zinc-100 text-zinc-900 hover:bg-white"
                                 : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
                             }`}
                     >
                         {saving ? (
                             <>
-                                <div className="h-5 w-5 animate-spin rounded-full border-2 border-black border-t-transparent" />
+                                <div className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-900 border-t-transparent" />
                                 Saving...
                             </>
                         ) : (
                             <>
                                 Continue
-                                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                             </>
                         )}
                     </button>

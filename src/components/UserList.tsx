@@ -184,7 +184,7 @@ export default function UserList({ onSelectUser }: UserListProps) {
                                     )}
 
                                     {/* Online/Offline indicator — now wired to real presence data */}
-                                    <span className="absolute bottom-0 right-0 rounded-full border-2 border-[#1a1d27]">
+                                    <span className="absolute bottom-0 right-0 rounded-full border-2 border-zinc-950">
                                         <OnlineIndicator isOnline={user.isOnline} size="md" />
                                     </span>
                                 </div>

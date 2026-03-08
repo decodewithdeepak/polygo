@@ -26,14 +26,14 @@ export default function ReactionPicker({ messageId, isMyMessage }: ReactionPicke
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <button
-                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-gray-700/50 text-zinc-400 hover:text-zinc-200"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-zinc-700/50 text-zinc-400 hover:text-zinc-200"
                     aria-label="Add reaction"
                 >
                     <SmilePlus className="h-3.5 w-3.5" />
                 </button>
             </PopoverTrigger>
             <PopoverContent
-                className="w-auto p-1.5 bg-gray-800 border-gray-700"
+                className="w-auto p-1.5 bg-zinc-900 border-zinc-700"
                 side={isMyMessage ? "left" : "right"}
             >
                 <div className="flex gap-1">
@@ -41,7 +41,7 @@ export default function ReactionPicker({ messageId, isMyMessage }: ReactionPicke
                         <button
                             key={emoji}
                             onClick={() => handlePick(emoji)}
-                            className="p-1.5 rounded hover:bg-gray-700 transition-colors text-base"
+                            className="p-1.5 rounded hover:bg-zinc-700 transition-colors text-base"
                         >
                             {emoji}
                         </button>

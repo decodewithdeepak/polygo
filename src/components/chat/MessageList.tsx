@@ -110,7 +110,7 @@ export default function MessageList({ messages, currentUserId }: MessageListProp
                                 {/* Date Divider — centered label showing "Today", "Yesterday", or "Feb 15" */}
                                 {showDivider && (
                                     <div className="my-4 flex items-center justify-center">
-                                        <div className="rounded-full bg-gray-700/50 px-3 py-1">
+                                        <div className="rounded-full bg-zinc-800 px-3 py-1">
                                             <span className="text-[11px] font-medium text-zinc-400">
                                                 {getDateDividerLabel(message.createdAt)}
                                             </span>
@@ -140,7 +140,7 @@ export default function MessageList({ messages, currentUserId }: MessageListProp
             {hasNewMessages && (
                 <button
                     onClick={scrollToBottom}
-                    className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 rounded-full bg-purple-600 px-4 py-2 text-xs font-medium text-white shadow-lg transition-all hover:bg-purple-700 hover:shadow-xl"
+                    className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 rounded-full bg-zinc-100 px-4 py-2 text-xs font-medium text-zinc-900 shadow-lg transition-all hover:bg-white hover:shadow-xl"
                 >
                     <ArrowDown className="h-3.5 w-3.5" />
                     New messages

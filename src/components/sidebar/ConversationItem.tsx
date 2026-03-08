@@ -51,8 +51,8 @@ export default function ConversationItem({
         <div
             onClick={() => router.push(`/conversations/${conversationId}`)}
             className={`flex cursor-pointer items-center gap-3 rounded-lg px-3 py-3 transition-colors ${isActive
-                ? "bg-gray-700/70"
-                : "hover:bg-gray-700/30"
+                ? "bg-zinc-800"
+                : "hover:bg-zinc-800/50"
                 }`}
         // isActive: highlights the currently open conversation so the user
         // knows which chat they're viewing — important for spatial awareness
@@ -79,7 +79,7 @@ export default function ConversationItem({
                 )}
 
                 {/* Online status — uses shared OnlineIndicator */}
-                <span className="absolute bottom-0 right-0 rounded-full border-2 border-[#1a1d27]">
+                <span className="absolute bottom-0 right-0 rounded-full border-2 border-zinc-950">
                     <OnlineIndicator isOnline={otherUser.isOnline} size="md" />
                 </span>
             </div>

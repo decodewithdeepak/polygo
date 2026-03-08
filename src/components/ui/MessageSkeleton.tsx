@@ -26,14 +26,14 @@ export default function MessageSkeleton() {
                 >
                     {/* Avatar skeleton — only on the left side (other person's messages) */}
                     {!isRight && (
-                        <div className="h-7 w-7 flex-shrink-0 animate-pulse rounded-full bg-gray-700/40" />
+                        <div className="h-7 w-7 flex-shrink-0 animate-pulse rounded-full bg-zinc-800" />
                     )}
 
                     {/* Message bubble skeleton — varying widths for realism */}
                     <div
                         className={`animate-pulse rounded-2xl px-4 py-3 ${isRight
-                                ? "rounded-br-sm bg-purple-600/20"
-                                : "rounded-bl-sm bg-gray-700/30"
+                            ? "rounded-br-sm bg-zinc-800"
+                            : "rounded-bl-sm bg-zinc-800"
                             }`}
                         style={{
                             // Varying widths make skeletons look like messages

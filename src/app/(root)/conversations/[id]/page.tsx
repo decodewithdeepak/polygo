@@ -119,20 +119,20 @@ export default function ConversationPage({ params }: ConversationPageProps) {
     // has no results — we handle both states explicitly
     if (messages === undefined || currentUser === undefined || conversations === undefined) {
         return (
-            <div className="flex h-full flex-col bg-[#0f1117]">
+            <div className="flex h-full flex-col bg-zinc-950">
                 {/* Header skeleton */}
-                <div className="flex items-center gap-3 border-b border-gray-700 bg-[#1a1d27] px-4 py-3 md:px-6">
+                <div className="flex items-center gap-3 border-b border-zinc-800 bg-zinc-900 px-4 py-3 md:px-6">
                     {/* px-4 on mobile, md:px-6 on desktop — matches ChatHeader responsive padding */}
-                    <div className="h-10 w-10 animate-pulse rounded-full bg-gray-700/50" />
-                    <div className="h-4 w-28 animate-pulse rounded bg-gray-700/50" />
+                    <div className="h-10 w-10 animate-pulse rounded-full bg-zinc-800" />
+                    <div className="h-4 w-28 animate-pulse rounded bg-zinc-800" />
                 </div>
 
                 {/* Messages area skeleton — alternating left/right bubbles */}
                 <MessageSkeleton />
 
                 {/* Input skeleton */}
-                <div className="border-t border-gray-700 bg-[#1a1d27] p-4">
-                    <div className="h-11 animate-pulse rounded-xl bg-gray-700/50" />
+                <div className="border-t border-zinc-800 bg-zinc-900 p-4">
+                    <div className="h-11 animate-pulse rounded-xl bg-zinc-800" />
                 </div>
             </div>
         );
@@ -165,7 +165,7 @@ export default function ConversationPage({ params }: ConversationPageProps) {
     // ─── Assemble the Chat Interface ──────────────────────────────────────
     // Three stacked sections: Header (fixed top) + Messages (scrollable) + Input (fixed bottom)
     return (
-        <div className="flex h-full flex-col bg-[#0f1117]">
+        <div className="flex h-full flex-col bg-zinc-950">
             {/* WHO you're talking to */}
             <ChatHeader
                 otherUser={{

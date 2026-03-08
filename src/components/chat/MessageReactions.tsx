@@ -25,8 +25,8 @@ export default function MessageReactions({ messageId, currentUserId }: MessageRe
                         key={emoji}
                         onClick={() => toggleReaction({ messageId, emoji })}
                         className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-xs transition-colors ${hasReacted
-                            ? "bg-purple-600/30 border border-purple-500/50 text-purple-200"
-                            : "bg-gray-700/50 border border-gray-600/50 text-zinc-300 hover:bg-gray-600/50"
+                            ? "bg-zinc-700 border border-zinc-500 text-zinc-100"
+                            : "bg-zinc-800/50 border border-zinc-700 text-zinc-400 hover:bg-zinc-700/50"
                             }`}
                     >
                         <span>{emoji}</span>

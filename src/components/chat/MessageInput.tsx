@@ -164,7 +164,7 @@ export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping 
                 <button
                     onClick={handleSurprise}
                     disabled={isSending}
-                    className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-md bg-zinc-800/60 text-zinc-400 transition-all hover:bg-purple-600/20 hover:text-purple-400 disabled:cursor-not-allowed disabled:opacity-50 border border-zinc-700/50"
+                    className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-md bg-zinc-800/60 text-zinc-400 transition-all hover:bg-zinc-700 hover:text-zinc-200 disabled:cursor-not-allowed disabled:opacity-50 border border-zinc-700/50"
                     title="Surprise! Generate a friendly message"
                 >
                     <Sparkles className="h-4 w-4" />

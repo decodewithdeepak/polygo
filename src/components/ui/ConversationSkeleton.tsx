@@ -23,19 +23,19 @@ export default function ConversationSkeleton() {
                 // px-3 py-3: matches ConversationItem's exact padding
                 >
                     {/* Avatar skeleton — 44px circle matches the real avatar size */}
-                    <div className="h-11 w-11 flex-shrink-0 animate-pulse rounded-full bg-gray-700/50" />
+                    <div className="h-11 w-11 flex-shrink-0 animate-pulse rounded-full bg-zinc-800" />
 
                     {/* Text content skeleton */}
                     <div className="flex-1">
                         {/* Name skeleton — shorter width to look realistic */}
-                        <div className="mb-2 h-3.5 w-24 animate-pulse rounded bg-gray-700/50" />
+                        <div className="mb-2 h-3.5 w-24 animate-pulse rounded bg-zinc-800" />
 
                         {/* Message preview skeleton — wider to mimic a sentence */}
-                        <div className="h-3 w-40 animate-pulse rounded bg-gray-700/40" />
+                        <div className="h-3 w-40 animate-pulse rounded bg-zinc-800" />
                     </div>
 
                     {/* Timestamp skeleton — small on the right side */}
-                    <div className="h-3 w-10 flex-shrink-0 animate-pulse rounded bg-gray-700/30" />
+                    <div className="h-3 w-10 flex-shrink-0 animate-pulse rounded bg-zinc-800" />
                 </div>
             ))}
         </div>

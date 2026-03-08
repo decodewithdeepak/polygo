@@ -61,7 +61,7 @@ export default function ChatHeader({ otherUser, conversationId }: ChatHeaderProp
             {/* On desktop both sidebar and chat are visible simultaneously */}
             <button
                 onClick={() => router.push("/")}
-                className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-gray-700/50 md:hidden"
+                className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-zinc-700/50 md:hidden"
             // md:hidden: CSS-based hiding — no JS needed, no re-render on resize
             // We use router.push("/") instead of router.back() so the user
             // always lands on the conversation list, not an unpredictable history entry
@@ -93,7 +93,7 @@ export default function ChatHeader({ otherUser, conversationId }: ChatHeaderProp
 
                 {/* Online/Offline indicator — uses shared OnlineIndicator */}
                 {/* "lg" size since the header has more visual space */}
-                <span className="absolute bottom-0 right-0 rounded-full border-2 border-[#1a1d27]">
+                <span className="absolute bottom-0 right-0 rounded-full border-2 border-zinc-950">
                     <OnlineIndicator isOnline={otherUser.isOnline} size="lg" />
                 </span>
             </div>

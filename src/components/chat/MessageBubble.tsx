@@ -85,8 +85,8 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
 
                 <div
                     className={`max-w-[70%] rounded-2xl px-4 py-2 ${isMyMessage
-                        ? "rounded-br-sm bg-gray-800/60 border border-gray-700/50"
-                        : "rounded-bl-sm bg-gray-800/60 border border-gray-700/50"
+                        ? "rounded-br-sm bg-zinc-800/60 border border-zinc-700/50"
+                        : "rounded-bl-sm bg-zinc-800/60 border border-zinc-700/50"
                         }`}
                 >
                     <p className="text-sm italic text-zinc-500">🚫 This message was deleted</p>
@@ -143,8 +143,8 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
                                     <div className="absolute bottom-full right-0 mb-2 w-64 p-3 bg-zinc-950 border border-zinc-800 text-zinc-100 text-[12px] shadow-2xl rounded-xl opacity-0 invisible group-hover/tip:opacity-100 group-hover/tip:visible transition-all duration-200 pointer-events-none">
                                         <div className="flex flex-col gap-1.5 leading-relaxed">
                                             <div className="flex items-center gap-2 border-b border-zinc-800 pb-1.5 mb-1">
-                                                <span className="h-1.5 w-1.5 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.8)]" />
-                                                <span className="font-bold text-yellow-400 text-[10px] uppercase tracking-[0.15em]">Language Insight</span>
+                                                <span className="h-1.5 w-1.5 rounded-full bg-zinc-400" />
+                                                <span className="font-medium text-zinc-400 text-[10px] uppercase tracking-[0.15em]">Language Insight</span>
                                             </div>
                                             <span className="text-zinc-300">{message.nuanceFlags.explanation}</span>
                                         </div>
@@ -182,21 +182,21 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
                             <Popover open={confirmOpen} onOpenChange={setConfirmOpen}>
                                 <PopoverTrigger asChild>
                                     <button
-                                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-gray-700/50 text-zinc-400 hover:text-red-400"
+                                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-zinc-700/50 text-zinc-400 hover:text-red-400"
                                         aria-label="Delete message"
                                     >
                                         <Trash2 className="h-3.5 w-3.5" />
                                     </button>
                                 </PopoverTrigger>
                                 <PopoverContent
-                                    className="w-auto p-3 bg-gray-800 border-gray-700 text-white"
+                                    className="w-auto p-3 bg-zinc-900 border-zinc-700 text-white"
                                     side={isMyMessage ? "left" : "right"}
                                 >
                                     <p className="text-sm mb-2">Delete this message?</p>
                                     <div className="flex gap-2 justify-end">
                                         <button
                                             onClick={() => setConfirmOpen(false)}
-                                            className="px-3 py-1 text-xs rounded bg-gray-700 hover:bg-gray-600 transition-colors"
+                                            className="px-3 py-1 text-xs rounded bg-zinc-700 hover:bg-zinc-600 transition-colors"
                                         >
                                             Cancel
                                         </button>
