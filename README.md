@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Polygo: Multilingual Chat App
 
-## Getting Started
+> **Translate words, preserve meaning.**
 
-First, run the development server:
+Polygo is a real-time web chat application designed for global teams. It solves the critical bottleneck of language barriers in hybrid work by providing auto-translation that understands cultural nuances and context, rather than just literal word-for-word replacement.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 The Problem
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Global teams often struggle with communication overhead when members speak different native languages. Traditional translation tools often miss context, tone, or cultural specificities, leading to misunderstandings. Polygo bridges this gap with an AI-driven, real-time experience.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✨ Core Features & Use Cases
 
-## Learn More
+### 1. Hybrid AI Translation
 
-To learn more about Next.js, take a look at the following resources:
+Polygo uses a dual-routing strategy for maximum speed and accuracy:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Indic-to-Indic**: Uses **Sarvam AI** for blazing-fast, colloquial translations between Indian languages.
+- **Foreign/Mixed**: Fallback to **Google Gemini** for high-reliability translations involving Japanese, Chinese, Spanish, etc.
+- **Use Case**: A developer in Bangalore can chat in Hindi with a designer in Tokyo who sees everything in Japanese instantly.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. Cultural Nuance & Learning Tips
 
-## Deploy on Vercel
+The app doesn't just translate; it explains. Using LLMs, it detects cultural nuances, grammar patterns, or word origins.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Use Case**: When a user sends a greeting like "Namaste," the recipient might see a tip explaining the cultural significance or the literal meaning ("I bow to you"), helping build cross-cultural empathy.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 3. Sentiment-Aware Text-to-Speech (TTS)
+
+Powered by Sarvam's **Bulbul v3** model, the TTS engine adjusts its tone based on message content:
+
+- **Excitement**: Faster pace and higher expressiveness for messages with "!" or "wow".
+- **Seriousness/Empathy**: Slower, more deliberate pace for longer or sensitive messages.
+- **Use Case**: Hearing a "Thank you!" with an enthusiastic tone makes the interaction feel more human and less robotic.
+
+### 4. Real-time Engine (Zero Latency)
+
+Built on **Convex**, the app uses WebSockets for instant message delivery without polling or manual refreshes.
+
+- **Use Case**: Large team brainstorming sessions where messages need to flow as fast as a natural conversation.
+
+### 5. Smart Typing Indicators & Presence
+
+Tracks user status (offline/online) and active typing states with auto-expiring indicators.
+
+- **Use Case**: Reduces "double-typing" (two people replying at once) by showing exactly when someone is composing a response.
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Styling**: Tailwind CSS & Vanilla CSS
+- **Icons**: Lucide React
+- **Auth**: Auth0 (Next.js Auth0 SDK)
+
+### Backend & Infrastructure
+
+- **Database/Backend**: [Convex](https://www.convex.dev/) (Real-time sync, WebSockets)
+- **Deployment**: Vercel
+
+### AI & Voice
+
+- **Indic Translation/TTS**: [Sarvam AI](https://www.sarvam.ai/) (Translate API & Bulbul v3)
+- **Global Translation/LLM**: [Google Gemini](https://ai.google.dev/)
+- **Detection**: Heuristic language and sentiment detection
+
+---
+
+## ⚙️ Getting Started
+
+1. **Clone the repository**:
+
+   ```bash
+   git clone <repo-url>
+   cd chat-app
+   ```
+
+2. **Install dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+3. **Configure Environment Variables**:
+   Create a `.env.local` file with:
+
+   ```env
+   # Convex
+   CONVEX_DEPLOYMENT_KEY=...
+   NEXT_PUBLIC_CONVEX_URL=...
+
+   # Auth0
+   AUTH0_SECRET=...
+   AUTH0_BASE_URL=...
+   AUTH0_ISSUER_BASE_URL=...
+   AUTH0_CLIENT_ID=...
+   AUTH0_CLIENT_SECRET=...
+
+   # AI Keys (Server-side)
+   SARVAM_API_KEY=...
+   GOOGLE_GENERATIVE_AI_API_KEY=...
+   ```
+
+4. **Run Development Mode**:
+   ```bash
+   npm run dev
+   # In another terminal:
+   npx convex dev
+   ```
+
+---
+
+## 🛡 Security
+
+- **Server-side Validation**: Every message read/write is validated on the Convex backend to ensure participant IDs match.
+- **Privacy**: Soft-deleting messages clears all AI-generated translations and metadata to prevent privacy leaks.
