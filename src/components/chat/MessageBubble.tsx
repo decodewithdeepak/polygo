@@ -84,6 +84,9 @@ export default function MessageBubble({ message, isMyMessage, currentUserId, isG
     const userLang = me?.preferredLanguage || "en";
     const translation = message.translations?.[userLang];
     const hasTranslation = !!translation;
+    
+    // Determine the original sender's language (default to "en" if not found)
+    // We strictly show the translation ONLY if it matches our CURRENT preferred language.
     const displayContent = (hasTranslation && !showOriginal) ? translation : message.content;
     const isTranslated = hasTranslation && !showOriginal;
 
@@ -195,7 +198,7 @@ export default function MessageBubble({ message, isMyMessage, currentUserId, isG
                         <div className="mt-1 flex items-center justify-between gap-4">
                             <div className="flex items-center gap-2">
                                 <p className={`text-[9px] ${isMyMessage ? "text-zinc-500" : "text-zinc-500"}`}>
-                                    <span className="uppercase font-semibold tracking-wider mr-1">{isTranslated ? userLang : (Object.keys(message.translations ?? {})[0] ?? userLang)}</span>
+                                    <span className="uppercase font-semibold tracking-wider mr-1">{isTranslated ? userLang : "ORIGINAL"}</span>
                                     · {formattedTime} {isTranslated && "· Translated"}
                                 </p>
                                 <button

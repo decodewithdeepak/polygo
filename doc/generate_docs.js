@@ -173,10 +173,10 @@ const doc = new Document({
     children: [
       // TITLE PAGE
       new Paragraph({ spacing: { before: 480 }, alignment: AlignmentType.CENTER, children: [new TextRun({ text: "Polygo", bold: true, size: 72, color: BLUE, font: "Arial" })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 80, after: 60 }, children: [new TextRun({ text: "Multilingual Chat Application", size: 32, color: GRAY, font: "Arial" })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 40, after: 400 }, children: [new TextRun({ text: "Modern Real-time Communication with AI Context", size: 24, color: GRAY, font: "Arial", italics: true })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 80, after: 60 }, children: [new TextRun({ text: "Product & Technical Documentation", size: 32, color: GRAY, font: "Arial" })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 40, after: 400 }, children: [new TextRun({ text: "Translating words, preserving meaning, building community", size: 24, color: GRAY, font: "Arial", italics: true })] }),
 
-      callout("A real-time web chat with auto-translation and cultural nuance detection. Designed for global teams to break language barriers in hybrid work while preserving meaning and context."),
+      callout("A comprehensive overview of Polygo's real-time multilingual capabilities, AI-driven translation routing, and future vision for enterprise integration."),
 
       spacer(),
       new Paragraph({ children: [new PageBreak()] }),
@@ -267,11 +267,10 @@ const doc = new Document({
       callout("npm install && npx convex dev --which will automatically Provision your backend and start the dev server."),
       spacer(),
 
-      h2("Future Roadmap"),
-      numbered("Multi-participant group chats with 'lowest-common-denominator' translation routing."),
-      numbered("Integration with Slack and Microsoft Teams as an AI-powered translation bot."),
-      numbered("Mobile native apps using React Native to leverage on-device STT/TTS optimizations."),
-      numbered("Enterprise 'Nuance Dictionary' where companies can upload their internal jargon for AI training."),
+      h2("Future Roadmap: Enterprise & SaaS"),
+      numbered("Polygo API (B2B SaaS): Unified translation infrastructure for developer integration into apps like Slack, Teams, or custom internal dashboards."),      numbered("Global Support Integration: High-impact use case for BPOs and customer support. Example: Enabling an support agent in India to assist a US-based Spanish-speaking customer using real-time local-to-foreign translation."),      numbered("Integration Plugins: Out-of-the-box support for Zendesk, Intercom, and WhatsApp Business for global customer support."),
+      numbered("Flexible Monetization: Usage-based pricing model ($0.05/message) with tiered subscriptions and Enterprise volume plans."),
+      numbered("Enterprise Dictionary: Private 'Nuance Dictionary' where companies can upload internal jargon for AI training and domain-specific translation."),
 
       spacer(),
       new Paragraph({

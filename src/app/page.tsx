@@ -20,22 +20,22 @@ const FEATURES = [
     {
         icon: Globe,
         title: "34 Languages",
-        desc: "All 22 official Indian languages plus 10 global ones — every script, every tongue.",
+        desc: "All 22 official Indian languages plus 12 global ones — every script, every tongue.",
     },
     {
         icon: Zap,
         title: "Dual AI Engine",
-        desc: "Sarvam AI for Indic speed. Gemini for global reach. Smart routing, never slow.",
+        desc: "Sarvam AI for Indic speed. Gemini 2.0 Flash for global reach. Smart routing, zero latency.",
     },
     {
         icon: BookOpen,
-        title: "Language Insights",
-        desc: "Every translated message teaches grammar, culture, idiom. Learn as you chat.",
+        title: "Cultural Insights",
+        desc: "Every message teaches grammar and culture. Learn natively as you chat in real-time.",
     },
     {
         icon: Mic,
         title: "Voice Personas",
-        desc: "6 Sarvam TTS voices with sentiment-aware pacing. Your messages, spoken beautifully.",
+        desc: "6 Sarvam TTS voices with sentiment-aware pacing. Your messages, spoken with emotion.",
     },
 ];
 
@@ -108,7 +108,7 @@ export default function RootPage() {
                             <span className="text-zinc-500">One conversation.</span>
                         </h1>
                         <p className="fade-up-3 mt-6 max-w-xl mx-auto text-base text-zinc-400 leading-relaxed">
-                            Chat in Hindi, reply in Japanese — Polygo translates every message in real-time,
+                            Chat in Hindi, reply in Japanese - Polygo translates every message in real-time,
                             preserving nuance, tone, and meaning across 34 languages.
                         </p>
                         <div className="fade-up-4 mt-10 flex items-center justify-center gap-4">
@@ -119,7 +119,6 @@ export default function RootPage() {
                                 Start Chatting
                                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                             </button>
-                            <span className="text-xs text-zinc-600">Free · No credit card</span>
                         </div>
                     </div>
 
