@@ -128,7 +128,7 @@ export default function OnboardingPage() {
                                                 <div className={`text-sm font-medium truncate ${isSelected ? "text-zinc-100" : "text-zinc-300"}`}>
                                                     {lang.name}
                                                 </div>
-                                                <div className="text-xs truncate text-zinc-600">
+                                                <div className="text-xs truncate text-zinc-400">
                                                     {lang.native}
                                                 </div>
                                             </div>

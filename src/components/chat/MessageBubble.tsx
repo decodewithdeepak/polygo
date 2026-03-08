@@ -167,7 +167,7 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
                                         }`}>
                                         i
                                     </div>
-                                    <div className="absolute bottom-full right-0 mb-2 w-64 p-3 bg-zinc-950 border border-zinc-800 text-zinc-100 text-[12px] shadow-2xl rounded-xl opacity-0 invisible group-hover/tip:opacity-100 group-hover/tip:visible transition-all duration-200 pointer-events-none">
+                                    <div className={`absolute bottom-full mb-2 w-64 p-3 bg-zinc-950 border border-zinc-800 text-zinc-100 text-[12px] shadow-2xl rounded-xl opacity-0 invisible group-hover/tip:opacity-100 group-hover/tip:visible transition-all duration-200 pointer-events-none z-[200] ${isMyMessage ? "right-0" : "left-0"}`}>
                                         <div className="flex flex-col gap-1.5 leading-relaxed">
                                             <div className="flex items-center gap-2 border-b border-zinc-800 pb-1.5 mb-1">
                                                 <span className="h-1.5 w-1.5 rounded-full bg-zinc-400" />
@@ -175,7 +175,7 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
                                             </div>
                                             <span className="text-zinc-300">{message.nuanceFlags.explanation}</span>
                                         </div>
-                                        <div className="absolute bottom-0 right-4 translate-y-1/2 rotate-45 w-2 h-2 bg-zinc-950 border-r border-b border-zinc-800" />
+                                        <div className={`absolute bottom-0 translate-y-1/2 rotate-45 w-2 h-2 bg-zinc-950 border-r border-b border-zinc-800 ${isMyMessage ? "right-4" : "left-4"}`} />
                                     </div>
                                 </div>
                             </div>
