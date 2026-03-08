@@ -1,6 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Dynamically set APP_BASE_URL for Vercel deployments
+  env: {
+    APP_BASE_URL: process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : process.env.APP_BASE_URL,
+  },
+
   // Allow external profile image hosts for the Next.js <Image> component.
   images: {
     remotePatterns: [
