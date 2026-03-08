@@ -193,6 +193,11 @@ export default function ConversationPage({ params }: ConversationPageProps) {
                 onSendMessage={handleSendMessage}
                 onTyping={notifyTyping}
                 onStoppedTyping={notifyStopped}
+                recentMessages={(messages || [])
+                    .filter((m) => !m.isDeleted)
+                    .slice(-6)
+                    .map((m) => ({ content: m.content, isFromMe: m.senderId === currentUser._id }))
+                }
             />
         </div>
     );

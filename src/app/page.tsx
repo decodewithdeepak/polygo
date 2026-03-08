@@ -85,8 +85,8 @@ export default function RootPage() {
                 {/* Nav */}
                 <nav className="flex items-center justify-between px-6 py-5 md:px-12 max-w-6xl mx-auto">
                     <div className="flex items-center gap-2">
-                        <Logo className="h-5 w-5 text-zinc-300" />
-                        <span className="text-sm font-semibold tracking-tight text-zinc-100">Polygo</span>
+                        <Logo className="h-6 w-6 text-zinc-300" />
+                        <span className="text-base font-semibold tracking-tight text-zinc-100">Polygo</span>
                     </div>
                     <button
                         onClick={handleLogin}
@@ -97,53 +97,56 @@ export default function RootPage() {
                 </nav>
 
                 {/* Hero */}
-                <section className="px-6 pt-20 pb-16 text-center max-w-4xl mx-auto">
-                    <p className="fade-up-1 mb-5 text-xs uppercase tracking-[0.25em] text-zinc-500">
-                        Real-time multilingual chat
-                    </p>
-                    <h1 className="fade-up-2 text-5xl font-semibold tracking-tight text-zinc-100 md:text-7xl leading-[1.05]">
-                        Every language.<br />
-                        <span className="text-zinc-500">One conversation.</span>
-                    </h1>
-                    <p className="fade-up-3 mt-6 max-w-xl mx-auto text-base text-zinc-400 leading-relaxed">
-                        Chat in Hindi, reply in Japanese — Polygo translates every message in real-time,
-                        preserving nuance, tone, and meaning across 34 languages.
-                    </p>
-                    <div className="fade-up-4 mt-10 flex items-center justify-center gap-4">
-                        <button
-                            onClick={handleLogin}
-                            className="group flex items-center gap-2 rounded-md bg-zinc-100 px-6 py-3 text-sm font-medium text-zinc-900 transition-colors hover:bg-white"
-                        >
-                            Start Chatting
-                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                        </button>
-                        <span className="text-xs text-zinc-600">Free · No credit card</span>
+                <section className="flex min-h-[calc(100vh-72px)] flex-col items-center justify-center w-full">
+                    {/* Text content */}
+                    <div className="px-6 pb-12 text-center max-w-4xl mx-auto">
+                        <p className="fade-up-1 mb-5 text-xs uppercase tracking-[0.25em] text-zinc-500">
+                            Real-time multilingual chat
+                        </p>
+                        <h1 className="fade-up-2 text-5xl font-semibold tracking-tight text-zinc-100 md:text-7xl leading-[1.05]">
+                            Every language.<br />
+                            <span className="text-zinc-500">One conversation.</span>
+                        </h1>
+                        <p className="fade-up-3 mt-6 max-w-xl mx-auto text-base text-zinc-400 leading-relaxed">
+                            Chat in Hindi, reply in Japanese — Polygo translates every message in real-time,
+                            preserving nuance, tone, and meaning across 34 languages.
+                        </p>
+                        <div className="fade-up-4 mt-10 flex items-center justify-center gap-4">
+                            <button
+                                onClick={handleLogin}
+                                className="group flex items-center gap-2 rounded-md bg-zinc-100 px-6 py-3 text-sm font-medium text-zinc-900 transition-colors hover:bg-white"
+                            >
+                                Start Chatting
+                                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                            </button>
+                            <span className="text-xs text-zinc-600">Free · No credit card</span>
+                        </div>
+                    </div>
+
+                    {/* Language marquee */}
+                    <div className="relative w-full overflow-hidden py-5 border-y border-zinc-800/50 bg-zinc-900/20">
+                        <div className="flex mb-2.5">
+                            <div className="marquee-left flex shrink-0 gap-3 pr-3">
+                                {[...MARQUEE_ROW_1, ...MARQUEE_ROW_1].map((lang, i) => (
+                                    <span key={i} className="whitespace-nowrap text-sm text-zinc-400 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/60">
+                                        {lang}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="flex">
+                            <div className="marquee-right flex shrink-0 gap-3 pr-3">
+                                {[...MARQUEE_ROW_2, ...MARQUEE_ROW_2].map((lang, i) => (
+                                    <span key={i} className="whitespace-nowrap text-sm text-zinc-400 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/60">
+                                        {lang}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-linear-to-r from-zinc-950 to-transparent" />
+                        <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-linear-to-l from-zinc-950 to-transparent" />
                     </div>
                 </section>
-
-                {/* Language marquee */}
-                <div className="relative w-full overflow-hidden py-5 border-y border-zinc-800/50 bg-zinc-900/20">
-                    <div className="flex mb-2.5">
-                        <div className="marquee-left flex shrink-0 gap-3 pr-3">
-                            {[...MARQUEE_ROW_1, ...MARQUEE_ROW_1].map((lang, i) => (
-                                <span key={i} className="whitespace-nowrap text-sm text-zinc-400 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/60">
-                                    {lang}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="flex">
-                        <div className="marquee-right flex shrink-0 gap-3 pr-3">
-                            {[...MARQUEE_ROW_2, ...MARQUEE_ROW_2].map((lang, i) => (
-                                <span key={i} className="whitespace-nowrap text-sm text-zinc-400 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/60">
-                                    {lang}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-linear-to-r from-zinc-950 to-transparent" />
-                    <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-linear-to-l from-zinc-950 to-transparent" />
-                </div>
 
                 {/* Chat demo */}
                 <section className="px-6 py-20 max-w-lg mx-auto">

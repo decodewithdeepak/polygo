@@ -87,6 +87,42 @@ Give ONE short language learning tip (max 15 words) about this ${srcName} text �
 }
 
 /**
+ * generateWithSarvam — General-purpose chat completion using sarvam-m.
+ * Best for Indic languages; returns "" on failure so callers can fallback.
+ */
+export async function generateWithSarvam(
+  prompt: string,
+  maxTokens = 100,
+): Promise<string> {
+  if (!SARVAM_API_KEY) return "";
+  try {
+    const res = await fetch("https://api.sarvam.ai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "api-subscription-key": SARVAM_API_KEY,
+        Authorization: `Bearer ${SARVAM_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "sarvam-m",
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: maxTokens,
+      }),
+    });
+    if (!res.ok) return "";
+    const data = await res.json();
+    const raw = data.choices?.[0]?.message?.content ?? "";
+    return raw
+      .replace(/<think>[\s\S]*?<\/think>/gi, "")
+      .replace(/<\/?think>/gi, "")
+      .replace(/^["'\s\n]+|["'\s\n]+$/g, "")
+      .trim();
+  } catch {
+    return "";
+  }
+}
+
+/**
  * generateTTS — Converts text to speech using Sarvam's Bulbul v3 model.
  * Includes basic sentiment mapping for more "empathetic" speech.
  */

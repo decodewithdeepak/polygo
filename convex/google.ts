@@ -78,3 +78,49 @@ export async function translateWithGoogle(
 
   throw new Error("All Gemini model fallback attempts failed.");
 }
+
+/**
+ * generateWithGemini — General-purpose text generation via Gemini.
+ * Used for AI reply suggestions, contextual replies, etc.
+ */
+export async function generateWithGemini(
+  prompt: string,
+  maxTokens = 120,
+): Promise<string> {
+  if (!GEMINI_API_KEY) return "";
+
+  const models = [
+    "gemini-3.1-flash-lite-preview",
+    "gemini-3.1-flash-preview",
+    "gemini-2.5-flash-lite",
+    "gemini-2.5-flash",
+    "gemini-2.0-flash-lite",
+    "gemini-2.0-flash",
+  ];
+
+  for (const model of models) {
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { maxOutputTokens: maxTokens, temperature: 0.7 },
+          }),
+        },
+      );
+      if (res.ok) {
+        const data = await res.json();
+        return (
+          data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? ""
+        );
+      }
+      if (res.status !== 429) break;
+    } catch (e) {
+      console.error(`generateWithGemini (${model}) error:`, e);
+    }
+  }
+  return "";
+}

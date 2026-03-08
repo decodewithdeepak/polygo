@@ -17,8 +17,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { SendHorizontal, Sparkles } from "lucide-react";
-import { useQuery } from "convex/react";
+import { SendHorizontal, PenLine, Puzzle } from "lucide-react";
+import { useQuery, useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
 const SURPRISE_MESSAGES: Record<string, string[]> = {
@@ -51,13 +51,17 @@ interface MessageInputProps {
     // These are optional so MessageInput can still work without typing indicators
     onTyping?: () => void;
     onStoppedTyping?: () => void;
+    // Recent messages for AI contextual reply
+    recentMessages?: { content: string; isFromMe: boolean }[];
 }
 
-export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping }: MessageInputProps) {
+export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping, recentMessages }: MessageInputProps) {
     const [messageContent, setMessageContent] = useState("");
     const [isSending, setIsSending] = useState(false);
+    const [isAIThinking, setIsAIThinking] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const me = useQuery(api.users.getMe);
+    const generateAIReply = useAction(api.ai.generateContextualReply);
 
     const handleSurprise = () => {
         const lang = me?.preferredLanguage || "en";
@@ -65,6 +69,25 @@ export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping 
         const randomMsg = messages[Math.floor(Math.random() * messages.length)];
         setMessageContent(randomMsg);
         textareaRef.current?.focus();
+    };
+
+    const handleAIReply = async () => {
+        if (isAIThinking || !recentMessages?.length) return;
+        setIsAIThinking(true);
+        try {
+            const reply = await generateAIReply({
+                recentMessages,
+                userLang: me?.preferredLanguage || "en",
+            });
+            if (reply) {
+                setMessageContent(reply);
+                textareaRef.current?.focus();
+            }
+        } catch (e) {
+            console.error("AI reply error:", e);
+        } finally {
+            setIsAIThinking(false);
+        }
     };
 
     // Auto-resize the textarea as the user types more lines
@@ -146,6 +169,16 @@ export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping 
     return (
         <div className="border-t border-zinc-800 bg-zinc-950 p-4">
             <div className="flex items-end gap-3">
+                {/* Surprise button — leftmost, random friendly message in selected language */}
+                <button
+                    onClick={handleSurprise}
+                    disabled={isSending || isAIThinking}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-zinc-800/60 text-zinc-400 transition-all hover:bg-zinc-700 hover:text-zinc-200 disabled:cursor-not-allowed disabled:opacity-50 border border-zinc-700/50"
+                    title="Surprise! Random friendly message"
+                >
+                    <Puzzle className="h-4 w-4" />
+                </button>
+
                 {/* Expanding textarea for message composition */}
                 <textarea
                     ref={textareaRef}
@@ -160,21 +193,26 @@ export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping 
                 // rows={1}: starts as a single line, expands automatically
                 />
 
-                {/* Surprise button — generates a friendly message in selected language */}
-                <button
-                    onClick={handleSurprise}
-                    disabled={isSending}
-                    className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-md bg-zinc-800/60 text-zinc-400 transition-all hover:bg-zinc-700 hover:text-zinc-200 disabled:cursor-not-allowed disabled:opacity-50 border border-zinc-700/50"
-                    title="Surprise! Generate a friendly message"
-                >
-                    <Sparkles className="h-4 w-4" />
-                </button>
+                {/* AI Reply button — contextual reply in user's language */}
+                {recentMessages && recentMessages.length > 0 && (
+                    <button
+                        onClick={handleAIReply}
+                        disabled={isSending || isAIThinking}
+                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-violet-950/60 text-violet-400 transition-all hover:bg-violet-900/60 hover:text-violet-200 disabled:cursor-not-allowed disabled:opacity-50 border border-violet-800/40"
+                        title="AI Reply — suggest a contextual reply in your language"
+                    >
+                        {isAIThinking
+                            ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-violet-400 border-t-transparent" />
+                            : <PenLine className="h-4 w-4" />
+                        }
+                    </button>
+                )}
 
                 {/* Send button — visual alternative to pressing Enter */}
                 <button
                     onClick={handleSendMessage}
-                    disabled={!messageContent.trim() || isSending}
-                    className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-900 transition-all hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50 border border-zinc-200"
+                    disabled={!messageContent.trim() || isSending || isAIThinking}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-900 transition-all hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50 border border-zinc-200"
                 // disabled when: empty message OR currently sending
                 // flex-shrink-0: prevents the button from shrinking when textarea expands
                 >

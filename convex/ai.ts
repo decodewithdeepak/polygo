@@ -1,8 +1,9 @@
 import { action } from "./_generated/server";
 import { v } from "convex/values";
 import { api } from "./_generated/api";
-import { translateWithGoogle } from "./google";
-import { translateWithSarvam, generateTipWithSarvam } from "./sarvam";
+import { translateWithGoogle, generateWithGemini } from "./google";
+import { translateWithSarvam, generateTipWithSarvam, generateWithSarvam } from "./sarvam";
+import { SARVAM_LANG_CODES } from "./shared";
 import { SARVAM_LANG_CODES } from "./shared";
 
 // All language names for tip generation and routing
@@ -157,5 +158,38 @@ export const processMessageAI = action({
     } catch (error) {
       console.error("AI processing error:", error);
     }
+  },
+});
+
+/**
+ * generateContextualReply — Generates a smart AI reply suggestion based on
+ * the recent conversation context, written in the user's preferred language.
+ * Routes to Sarvam (sarvam-m) for Indic languages, Gemini as fallback.
+ */
+export const generateContextualReply = action({
+  args: {
+    recentMessages: v.array(
+      v.object({ content: v.string(), isFromMe: v.boolean() }),
+    ),
+    userLang: v.string(),
+  },
+  handler: async (_ctx, args) => {
+    const langName = ALL_LANG_NAMES[args.userLang] || "English";
+    const context = args.recentMessages
+      .slice(-6)
+      .map((m) => `${m.isFromMe ? "Me" : "Other"}: ${m.content}`)
+      .join("\n");
+
+    const prompt = `You are a smart chat assistant. Based on this conversation, write a natural, friendly reply in ${langName}. Output ONLY the reply text — no quotes, no labels, no explanations. Keep it to 1–2 sentences.\n\nConversation:\n${context}\n\nReply in ${langName}:`;
+
+    // Use Sarvam for Indic languages (faster + better quality for Indian scripts)
+    const isIndic = !!SARVAM_LANG_CODES[args.userLang];
+    if (isIndic) {
+      const sarvamReply = await generateWithSarvam(prompt, 80);
+      if (sarvamReply) return sarvamReply;
+    }
+
+    // Fallback to Gemini for foreign languages or if Sarvam fails
+    return await generateWithGemini(prompt, 80);
   },
 });
