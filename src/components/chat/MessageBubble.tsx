@@ -97,22 +97,22 @@ export default function MessageBubble({ message, isMyMessage, currentUserId, isG
                 className={`flex items-end gap-2 ${isMyMessage ? "justify-end" : "justify-start"}`}
             >
                 {!isMyMessage && (
-                    <div className="flex-shrink-0">
-                        {message.sender.imageUrl ? (
-                            <Image
-                                src={message.sender.imageUrl}
-                                alt={message.sender.name}
-                                width={28}
-                                height={28}
-                                className="h-7 w-7 rounded-full object-cover"
-                            />
-                        ) : (
-                            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-cyan-600 text-xs font-semibold text-white">
-                                {message.sender.name.charAt(0).toUpperCase()}
-                            </div>
-                        )}
-                    </div>
-                )}
+                <div className="shrink-0">
+                    {message.sender.imageUrl ? (
+                        <Image
+                            src={message.sender.imageUrl}
+                            alt={message.sender.name}
+                            width={28}
+                            height={28}
+                            className="h-7 w-7 rounded-full object-cover"
+                        />
+                    ) : (
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-cyan-600 text-xs font-semibold text-white">
+                            {message.sender.name.charAt(0).toUpperCase()}
+                        </div>
+                    )}
+                </div>
+            )}
 
                 <div
                     className={`max-w-[70%] rounded-2xl px-4 py-2 ${isMyMessage
@@ -135,7 +135,7 @@ export default function MessageBubble({ message, isMyMessage, currentUserId, isG
             className={`group flex items-end gap-2 ${isMyMessage ? "justify-end" : "justify-start"}`}
         >
             {!isMyMessage && (
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                     {message.sender.imageUrl ? (
                         <Image
                             src={message.sender.imageUrl}
@@ -145,7 +145,7 @@ export default function MessageBubble({ message, isMyMessage, currentUserId, isG
                             className="h-7 w-7 rounded-full object-cover"
                         />
                     ) : (
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-700 text-xs font-semibold text-white">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-cyan-600 text-xs font-semibold text-white">
                             {message.sender.name.charAt(0).toUpperCase()}
                         </div>
                     )}

@@ -163,10 +163,21 @@ export const leaveGroup = mutation({
       (id) => id !== currentUser._id,
     );
 
+    // If the group is now empty, delete it
+    if (updatedIds.length === 0) {
+      await ctx.db.delete(args.conversationId);
+      return;
+    }
+
     // Also remove from admin list if applicable
-    const updatedAdmins = (conversation.groupAdmin ?? []).filter(
+    let updatedAdmins = (conversation.groupAdmin ?? []).filter(
       (id) => id !== currentUser._id,
     );
+
+    // If the person leaving was the only admin, appoint the next available member as admin
+    if (updatedAdmins.length === 0 && updatedIds.length > 0) {
+      updatedAdmins = [updatedIds[0]];
+    }
 
     await ctx.db.patch(args.conversationId, {
       participantIds: updatedIds,
