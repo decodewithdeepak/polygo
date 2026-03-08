@@ -173,6 +173,7 @@ export default function ConversationPage({ params }: ConversationPageProps) {
                     imageUrl: otherUser.imageUrl,
                     isOnline: otherUser.isOnline,
                 }}
+                conversationId={conversationId}
             />
 
             {/* WHAT was said — scrollable message history */}

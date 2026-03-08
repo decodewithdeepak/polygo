@@ -16,10 +16,15 @@
 
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
+import { ArrowLeft, Trash2 } from "lucide-react";
 import Image from "next/image";
 import OnlineIndicator from "../ui/OnlineIndicator";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface ChatHeaderProps {
     otherUser: {
@@ -27,10 +32,24 @@ interface ChatHeaderProps {
         imageUrl: string;
         isOnline: boolean;
     };
+    conversationId: Id<"conversations">;
 }
 
-export default function ChatHeader({ otherUser }: ChatHeaderProps) {
+export default function ChatHeader({ otherUser, conversationId }: ChatHeaderProps) {
     const router = useRouter();
+    const clearChat = useMutation(api.messages.clearChat);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [clearing, setClearing] = useState(false);
+
+    const handleClearChat = async () => {
+        setClearing(true);
+        try {
+            await clearChat({ conversationId });
+        } finally {
+            setClearing(false);
+            setConfirmOpen(false);
+        }
+    };
 
     return (
         <div className="flex items-center gap-3 border-b border-zinc-800 bg-zinc-950 px-4 py-3 md:px-6">
@@ -80,7 +99,7 @@ export default function ChatHeader({ otherUser }: ChatHeaderProps) {
             </div>
 
             {/* ===== Name + Status ===== */}
-            <div>
+            <div className="flex-1">
                 <h2 className="text-sm font-semibold text-white">
                     {otherUser.name}
                 </h2>
@@ -88,6 +107,37 @@ export default function ChatHeader({ otherUser }: ChatHeaderProps) {
                     {otherUser.isOnline ? "Online" : "Offline"}
                 </p>
             </div>
+
+            {/* ===== Clear Chat ===== */}
+            <Popover open={confirmOpen} onOpenChange={setConfirmOpen}>
+                <PopoverTrigger asChild>
+                    <button
+                        className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-zinc-800 hover:text-red-400"
+                        title="Clear chat"
+                    >
+                        <Trash2 className="h-4 w-4" />
+                    </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-64 p-4 bg-zinc-900 border-zinc-700 text-white shadow-xl" side="bottom" align="end">
+                    <p className="text-sm font-medium mb-1">Clear this conversation?</p>
+                    <p className="text-xs text-zinc-400 mb-3">This will delete all messages for both users. This cannot be undone.</p>
+                    <div className="flex gap-2 justify-end">
+                        <button
+                            onClick={() => setConfirmOpen(false)}
+                            className="px-3 py-1.5 text-xs rounded-md bg-zinc-800 hover:bg-zinc-700 transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleClearChat}
+                            disabled={clearing}
+                            className="px-3 py-1.5 text-xs rounded-md bg-red-600 hover:bg-red-500 transition-colors disabled:opacity-50"
+                        >
+                            {clearing ? "Clearing..." : "Clear All"}
+                        </button>
+                    </div>
+                </PopoverContent>
+            </Popover>
         </div>
     );
 }

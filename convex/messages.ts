@@ -97,15 +97,13 @@ export const send = mutation({
     const senderLang = currentUser.preferredLanguage || "en";
     const receiverLang = receiver?.preferredLanguage || "en";
 
-    // Only call AI if languages differ — no point translating en→en
-    if (senderLang !== receiverLang) {
-      await ctx.scheduler.runAfter(0, (api as any).ai.processMessageAI, {
-        messageId,
-        text: args.content,
-        sourceLang: senderLang,
-        targetLang: receiverLang,
-      });
-    }
+    // Call AI to handle translation & learning tips
+    await ctx.scheduler.runAfter(0, (api as any).ai.processMessageAI, {
+      messageId,
+      text: args.content,
+      senderLang: senderLang,
+      receiverLang: receiverLang,
+    });
 
     return messageId;
   },
@@ -177,6 +175,50 @@ export const deleteMessage = mutation({
       translations: undefined, // Clear translations!
       nuanceFlags: undefined, // Clear nuance flags!
     });
+  },
+});
+
+/**
+ * clearChat — Hard-deletes ALL messages in a conversation for both users.
+ * Only a participant can clear the chat.
+ */
+export const clearChat = mutation({
+  args: {
+    conversationId: v.id("conversations"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const currentUser = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
+      .unique();
+    if (!currentUser) throw new Error("User not found");
+
+    const conversation = await ctx.db.get(args.conversationId);
+    if (!conversation) throw new Error("Conversation not found");
+
+    if (!conversation.participantIds.includes(currentUser._id)) {
+      throw new Error("Unauthorized");
+    }
+
+    const messages = await ctx.db
+      .query("messages")
+      .withIndex("by_conversationId", (q) => q.eq("conversationId", args.conversationId))
+      .collect();
+
+    for (const msg of messages) {
+      // Delete associated reactions first
+      const reactions = await ctx.db
+        .query("reactions")
+        .withIndex("by_messageId", (q) => q.eq("messageId", msg._id))
+        .collect();
+      for (const r of reactions) {
+        await ctx.db.delete(r._id);
+      }
+      await ctx.db.delete(msg._id);
+    }
   },
 });
 

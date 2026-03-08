@@ -1,4 +1,4 @@
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { api } from "../../../convex/_generated/api";
 import { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ export default function UserStoreProvider({
     children: React.ReactNode;
 }) {
     const storeUser = useMutation(api.users.store);
+    const me = useQuery(api.users.getMe);
     const { user, isLoading } = useUser();
     const isAuthenticated = !!user;
     const [isRegistered, setIsRegistered] = useState(false);
@@ -46,6 +47,16 @@ export default function UserStoreProvider({
         user?.name,
         user?.picture,
     ]);
+
+    // Redirect to onboarding if user hasn't completed it
+    useEffect(() => {
+        if (isRegistered && me && me.hasCompletedOnboarding === false) {
+            // Only redirect if not already on the onboarding page
+            if (!window.location.pathname.startsWith("/onboarding")) {
+                window.location.href = "/onboarding";
+            }
+        }
+    }, [isRegistered, me]);
 
     usePresence(isRegistered);
 

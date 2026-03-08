@@ -122,7 +122,7 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
             )}
 
             {/* ===== Message Bubble ===== */}
-            <div className="max-w-[70%]">
+            <div className="max-w-[70%] group relative">
                 <div className="relative flex items-center gap-1">
                     <div
                         className={`relative rounded-2xl px-4 py-2 ${isMyMessage
@@ -130,23 +130,28 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
                             : "rounded-bl-sm bg-zinc-800 text-white border border-zinc-700/50"
                             }`}
                     >
-                        {/* Nuance Warning Badge - Simplified */}
+                        {/* Language Tip — shows on hover, tooltip on hover */}
                         {message.nuanceFlags?.hasNuance && (
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <button className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-zinc-900 border border-zinc-700 text-[8px] text-white shadow-md hover:scale-110 transition-transform">
-                                        !
-                                    </button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-64 p-3 bg-zinc-900 border-zinc-800 text-zinc-100 text-xs shadow-xl">
-                                    <p className="font-bold text-zinc-100 mb-1 border-b border-zinc-800 pb-1">
-                                        Cultural Context ({message.nuanceFlags.type})
-                                    </p>
-                                    <p className="leading-relaxed text-zinc-400">
-                                        {message.nuanceFlags.explanation}
-                                    </p>
-                                </PopoverContent>
-                            </Popover>
+                            <div className="absolute -top-2 -right-2 z-[100] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                <div className="relative group/tip">
+                                    <div className={`flex h-5 w-5 items-center justify-center rounded-full border text-[10px] font-bold shadow-lg cursor-default ${isMyMessage
+                                        ? "bg-white border-zinc-300 text-zinc-900"
+                                        : "bg-zinc-900 border-zinc-600 text-white"
+                                        }`}>
+                                        i
+                                    </div>
+                                    <div className="absolute bottom-full right-0 mb-2 w-64 p-3 bg-zinc-950 border border-zinc-800 text-zinc-100 text-[12px] shadow-2xl rounded-xl opacity-0 invisible group-hover/tip:opacity-100 group-hover/tip:visible transition-all duration-200 pointer-events-none">
+                                        <div className="flex flex-col gap-1.5 leading-relaxed">
+                                            <div className="flex items-center gap-2 border-b border-zinc-800 pb-1.5 mb-1">
+                                                <span className="h-1.5 w-1.5 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.8)]" />
+                                                <span className="font-bold text-yellow-400 text-[10px] uppercase tracking-[0.15em]">Language Insight</span>
+                                            </div>
+                                            <span className="text-zinc-300">{message.nuanceFlags.explanation}</span>
+                                        </div>
+                                        <div className="absolute bottom-0 right-4 translate-y-1/2 rotate-45 w-2 h-2 bg-zinc-950 border-r border-b border-zinc-800" />
+                                    </div>
+                                </div>
+                            </div>
                         )}
 
                         <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">

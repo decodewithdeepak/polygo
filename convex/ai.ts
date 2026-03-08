@@ -1,130 +1,129 @@
 import { action } from "./_generated/server";
 import { v } from "convex/values";
 import { api } from "./_generated/api";
+import { translateWithGoogle } from "./google";
+import { translateWithSarvam, generateTipWithSarvam, SARVAM_LANG_CODES } from "./sarvam";
 
-const SARVAM_API_KEY = process.env.SARVAM_API_KEY;
-
-// Sarvam Translate API language codes (blazing fast, no LLM overhead)
-const SARVAM_LANG_CODES: Record<string, string> = {
-  en: "en-IN",
-  hi: "hi-IN",
-  bn: "bn-IN",
-  ta: "ta-IN",
-  te: "te-IN",
-  mr: "mr-IN",
-  gu: "gu-IN",
-  kn: "kn-IN",
-  ml: "ml-IN",
-  pa: "pa-IN",
-  ur: "ur-IN",
-  or: "od-IN",
-  as: "as-IN",
-  mai: "mai-IN",
-  ne: "ne-IN",
-  sa: "sa-IN",
-  kok: "kok-IN",
-  doi: "doi-IN",
-  sd: "sd-IN",
-  sat: "sat-IN",
-  ks: "ks-IN",
-  mni: "mni-IN",
-  brx: "brx-IN",
+// All language names for tip generation and routing
+const ALL_LANG_NAMES: Record<string, string> = {
+  en: "English", hi: "Hindi", bn: "Bengali", ta: "Tamil", te: "Telugu",
+  mr: "Marathi", gu: "Gujarati", kn: "Kannada", ml: "Malayalam", pa: "Punjabi",
+  ur: "Urdu", or: "Odia", as: "Assamese", mai: "Maithili", ne: "Nepali",
+  sa: "Sanskrit", kok: "Konkani", doi: "Dogri", sd: "Sindhi", sat: "Santali",
+  ks: "Kashmiri", mni: "Manipuri", brx: "Bodo",
+  ja: "Japanese", es: "Spanish", fr: "French", de: "German", zh: "Chinese",
+  ko: "Korean", pt: "Portuguese", ru: "Russian", ar: "Arabic", it: "Italian",
 };
 
-// For non-Indic languages, fall back to sarvam-m chat
-const LANG_NAMES: Record<string, string> = {
-  ja: "Japanese",
-  es: "Spanish",
-  fr: "French",
-  de: "German",
-  zh: "Chinese",
-  ko: "Korean",
-  pt: "Portuguese",
-  ru: "Russian",
-  ar: "Arabic",
-  it: "Italian",
-};
-
+/**
+ * Routes translation based on language type:
+ * - Indic <-> Indic uses Sarvam (Fastest)
+ * - Anything involving Foreign (JA, ZH, etc.) uses Google Gemini (Reliable)
+ */
 async function translateFast(
   text: string,
   sourceLang: string,
-  targetLang: string,
-  apiKey: string
+  targetLang: string
 ): Promise<string> {
-  const srcCode = SARVAM_LANG_CODES[sourceLang];
-  const tgtCode = SARVAM_LANG_CODES[targetLang];
+  const srcName = ALL_LANG_NAMES[sourceLang] || sourceLang;
+  const tgtName = ALL_LANG_NAMES[targetLang] || targetLang;
 
-  // Fast path: both languages supported by Sarvam Translate API (~100ms)
-  if (srcCode && tgtCode) {
-    const res = await fetch("https://api.sarvam.ai/translate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "api-subscription-key": apiKey,
-      },
-      body: JSON.stringify({
-        input: text,
-        source_language_code: srcCode,
-        target_language_code: tgtCode,
-        mode: "modern-colloquial",
-      }),
-    });
-    if (!res.ok) throw new Error(`Sarvam Translate error: ${res.status}`);
-    const data = await res.json();
-    return data.translated_text;
+  // 1. Try Sarvam (Indic Path)
+  const sarvamTranslation = await translateWithSarvam(text, sourceLang, targetLang);
+  if (sarvamTranslation) return sarvamTranslation;
+
+  // 2. Fallback to Google (Foreign/Mixed Path)
+  // This handles characters that Sarvam is "blind" to (Japanese, etc.)
+  return translateWithGoogle(text, srcName, tgtName);
+}
+
+/**
+ * Generates a relevant language learning tip
+ */
+async function generateLearningTip(
+  originalText: string,
+  translatedText: string,
+  sourceLang: string,
+  targetLang: string
+): Promise<string> {
+  const srcName = ALL_LANG_NAMES[sourceLang] || sourceLang;
+  const tgtName = ALL_LANG_NAMES[targetLang] || targetLang;
+
+  // Use Google for foreign language tips as Sarvam struggles with non-Indic text
+  const isForeign = !SARVAM_LANG_CODES[sourceLang];
+  
+  if (isForeign) {
+    try {
+      return await translateWithGoogle(
+        `Original (${srcName}): "${originalText}"
+Translation (${tgtName}): "${translatedText}"`,
+        "Language Learning Assistant",
+        `Short language tip (max 15 words) about the ${srcName} text (grammar/culture/nuance). Only the tip text.`
+      );
+    } catch (e) {
+      console.error("Google tip error:", e);
+    }
   }
 
-  // Slow path: use sarvam-m chat for non-Indian languages (~1-2s)
-  const targetName = LANG_NAMES[targetLang] || targetLang;
-  const res = await fetch("https://api.sarvam.ai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: "sarvam-m",
-      messages: [
-        { role: "user", content: `Translate to ${targetName}: "${text}"\nReply with ONLY the translation, nothing else.` },
-      ],
-      max_tokens: 150,
-    }),
-  });
-  if (!res.ok) throw new Error(`Sarvam Chat error: ${res.status}`);
-  const data = await res.json();
-  const content = data.choices?.[0]?.message?.content ?? "";
-  // Strip <think> tags and quotes
-  return content.replace(/<think>[\s\S]*?<\/think>/g, "").replace(/^["'\s]+|["'\s]+$/g, "").trim();
+  // Use Sarvam's LLM for Indic language tips
+  return generateTipWithSarvam(originalText, translatedText, srcName, tgtName);
 }
 
 export const processMessageAI = action({
   args: {
     messageId: v.id("messages"),
     text: v.string(),
-    sourceLang: v.string(),
-    targetLang: v.string(),
+    senderLang: v.string(),
+    receiverLang: v.string(),
   },
   handler: async (ctx, args) => {
-    if (!SARVAM_API_KEY) {
-      console.error("SARVAM_API_KEY is missing. Skipping AI processing.");
-      return;
-    }
-
     try {
-      const translation = await translateFast(
+      // Step 1: Check if translation is even needed (Auto-Detection)
+      let translation = "";
+      
+      // Heuristic: if settings match, detect if we should translate anyway (e.g., Hindi chars in an English room)
+      const hasHindi = /[\u0900-\u097F]/.test(args.text);
+      const isEnglishOnly = args.senderLang === "en" && args.receiverLang === "en";
+      
+      let effectiveSourceLang = args.senderLang;
+      if (isEnglishOnly && hasHindi) effectiveSourceLang = "hi";
+
+      let shouldTranslate = effectiveSourceLang !== args.receiverLang;
+
+      if (shouldTranslate) {
+        translation = await translateFast(
+          args.text,
+          effectiveSourceLang,
+          args.receiverLang
+        );
+      }
+
+      // Step 2: Save translation (if any)
+      if (translation) {
+        await ctx.runMutation((api as any).messages.updateAIResults, {
+          messageId: args.messageId,
+          translations: { [args.receiverLang]: translation },
+          nuanceFlags: { hasNuance: false, type: "none", explanation: "" },
+        });
+      }
+
+      // Step 3: Generate learning tip (async) using the best available model
+      const tip = await generateLearningTip(
         args.text,
-        args.sourceLang,
-        args.targetLang,
-        SARVAM_API_KEY
+        translation || args.text,
+        args.senderLang,
+        args.receiverLang
       );
 
-      await ctx.runMutation((api as any).messages.updateAIResults, {
-        messageId: args.messageId,
-        translations: { [args.targetLang]: translation },
-        nuanceFlags: { hasNuance: false, type: "none", explanation: "" },
-      });
+      if (tip) {
+        await ctx.runMutation((api as any).messages.updateAIResults, {
+          messageId: args.messageId,
+          translations: translation ? { [args.receiverLang]: translation } : {},
+          nuanceFlags: { hasNuance: true, type: "learn", explanation: tip },
+        });
+      }
     } catch (error) {
-      console.error("AI Translation failed:", error);
+      console.error("AI processing error:", error);
     }
   },
 });

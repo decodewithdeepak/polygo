@@ -10,8 +10,10 @@
 
 import type * as ai from "../ai.js";
 import type * as conversations from "../conversations.js";
+import type * as google from "../google.js";
 import type * as messages from "../messages.js";
 import type * as reactions from "../reactions.js";
+import type * as sarvam from "../sarvam.js";
 import type * as shared from "../shared.js";
 import type * as typing from "../typing.js";
 import type * as users from "../users.js";
@@ -25,8 +27,10 @@ import type {
 declare const fullApi: ApiFromModules<{
   ai: typeof ai;
   conversations: typeof conversations;
+  google: typeof google;
   messages: typeof messages;
   reactions: typeof reactions;
+  sarvam: typeof sarvam;
   shared: typeof shared;
   typing: typeof typing;
   users: typeof users;

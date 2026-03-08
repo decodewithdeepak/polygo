@@ -10,6 +10,7 @@ export default defineSchema({
         isOnline: v.boolean(),
         lastSeen: v.number(),
         preferredLanguage: v.string(), // "en", "hi", "ja", etc.
+        hasCompletedOnboarding: v.optional(v.boolean()),
     }).index("by_externalId", ["externalId"]),
 
     conversations: defineTable({
