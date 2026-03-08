@@ -68,7 +68,7 @@ export default function OnboardingPage() {
     }
 
     if (!user) {
-        window.location.href = "/api/auth/login";
+        window.location.href = "/auth/login";
         return null;
     }
 
@@ -120,8 +120,8 @@ export default function OnboardingPage() {
                                             key={lang.code}
                                             onClick={() => setSelected(lang.code)}
                                             className={`flex items-center gap-2.5 rounded-lg border px-3 py-2.5 text-left transition-colors ${isSelected
-                                                    ? "border-zinc-500 bg-zinc-800"
-                                                    : "border-zinc-800 bg-zinc-900/50 hover:border-zinc-700 hover:bg-zinc-900"
+                                                ? "border-zinc-500 bg-zinc-800"
+                                                : "border-zinc-800 bg-zinc-900/50 hover:border-zinc-700 hover:bg-zinc-900"
                                                 }`}
                                         >
                                             <div className="min-w-0 flex-1">
@@ -151,8 +151,8 @@ export default function OnboardingPage() {
                         onClick={handleContinue}
                         disabled={!selected || saving}
                         className={`group flex items-center gap-2 rounded-md px-6 py-2.5 text-sm font-medium transition-colors ${selected
-                                ? "bg-zinc-100 text-zinc-900 hover:bg-white"
-                                : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                            ? "bg-zinc-100 text-zinc-900 hover:bg-white"
+                            : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
                             }`}
                     >
                         {saving ? (

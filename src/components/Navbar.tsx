@@ -166,7 +166,7 @@ export default function Navbar() {
                             <AvatarFallback className="bg-zinc-800 text-xs text-zinc-300">{user.name?.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <a
-                            href="/api/auth/logout"
+                            href="/auth/logout"
                             className="flex items-center justify-center rounded-md p-1.5 text-zinc-500 transition-colors hover:bg-zinc-800 hover:text-zinc-200"
                             title="Log out"
                         >

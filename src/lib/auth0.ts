@@ -9,9 +9,4 @@ export const auth0 = new Auth0Client({
   authorizationParameters: {
     scope: "openid profile email offline_access",
   },
-  routes: {
-    login: "/api/auth/login",
-    callback: "/api/auth/callback",
-    logout: "/api/auth/logout",
-  },
 });

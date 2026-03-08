@@ -25,7 +25,7 @@ export default function RootPage() {
     }
 
     const handleLogin = () => {
-        window.location.href = "/api/auth/login";
+        window.location.href = "/auth/login";
     };
 
     return (

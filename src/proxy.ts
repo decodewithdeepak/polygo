@@ -2,41 +2,35 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth0 } from "@/lib/auth0";
 
 /**
- * Next.js 16 Proxy Middleware
- * Handles Auth0 routes (/api/auth/*) and enforces session security.
+ * Next.js 16 Proxy
+ * Handles Auth0 routes (/auth/*) and enforces session security.
  */
-export default async function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
+  // Always run auth0.middleware first — it handles login/callback/logout
+  // routes AND manages session rolling/cookies for all other routes.
+  const authRes = await auth0.middleware(request);
+
   const path = request.nextUrl.pathname;
-  console.log(`[Middleware] Request: ${path}`);
 
-  // 1. Let Auth0 middleware handle its own routes (/api/auth/login, etc.)
-  // We EXCLUDE the Convex token bridge from the Auth0 internal middleware
-  // so that our custom route handler can actually run.
-  if (request.nextUrl.pathname.startsWith("/api/auth")) {
-    return await auth0.middleware(request);
+  // Let Auth0 SDK handle its own routes without interference
+  if (path.startsWith("/auth")) {
+    return authRes;
   }
 
-  // 2. Public Route Exception (Landing page)
+  // Public routes — no session required
   if (path === "/") {
-    console.log("[Middleware] Public route allowed");
-    return NextResponse.next();
+    return authRes;
   }
 
-  // 3. Enforce Authentication for all other routes
+  // Protected routes — require a valid session
   const session = await auth0.getSession(request);
   if (!session) {
-    console.warn(
-      `[Middleware] No session found for ${path}. Redirecting to login.`,
-    );
-    // Redirect to Auth0 login if no session exists
     return NextResponse.redirect(
-      new URL("/api/auth/login", request.nextUrl.origin),
+      new URL("/auth/login", request.nextUrl.origin),
     );
   }
 
-  // For protected routes, we still run the Auth0 middleware logic
-  // to handle session rolling/cookies, and then proceed.
-  return await auth0.middleware(request);
+  return authRes;
 }
 
 export const config = {
