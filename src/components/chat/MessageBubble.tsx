@@ -188,7 +188,8 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
                         <div className="mt-1 flex items-center justify-between gap-4">
                             <div className="flex items-center gap-2">
                                 <p className={`text-[9px] ${isMyMessage ? "text-zinc-500" : "text-zinc-500"}`}>
-                                    {formattedTime} {isTranslated && "• Translated"}
+                                    <span className="uppercase font-semibold tracking-wider mr-1">{isTranslated ? userLang : (Object.keys(message.translations ?? {})[0] ?? userLang)}</span>
+                                    · {formattedTime} {isTranslated && "· Translated"}
                                 </p>
                                 <button
                                     onClick={handlePlay}

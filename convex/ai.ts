@@ -86,19 +86,19 @@ async function generateLearningTip(
 
   if (isForeign) {
     try {
-      return await translateWithGoogle(
-        `Original (${srcName}): "${originalText}"
-Translation (${tgtName}): "${translatedText}"`,
-        "Language Learning Assistant",
-        `Short language tip (max 15 words) about the ${srcName} text (grammar/culture/nuance). Only the tip text.`,
-      );
+      const prompt = `Original (${srcName}): "${originalText}"
+Translation (${tgtName}): "${translatedText}"
+
+Give ONE short language learning tip (max 15 words) about the ${srcName} text (grammar, culture, or nuance). Write the tip in ${tgtName}. Reply with ONLY the tip text.`;
+      const tip = await generateWithGemini(prompt, 60);
+      if (tip) return tip;
     } catch (e) {
       console.error("Google tip error:", e);
     }
   }
 
-  // Use Sarvam's LLM for Indic language tips
-  return generateTipWithSarvam(originalText, translatedText, srcName, tgtName);
+  // Use Sarvam's LLM for Indic language tips — reply in receiver's language
+  return generateTipWithSarvam(originalText, translatedText, srcName, tgtName, tgtName);
 }
 
 export const processMessageAI = action({

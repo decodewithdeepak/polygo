@@ -44,8 +44,11 @@ export async function generateTipWithSarvam(
   translatedText: string,
   srcName: string,
   tgtName: string,
+  replyLangName?: string,
 ): Promise<string> {
   if (!SARVAM_API_KEY) return "";
+
+  const outputLang = replyLangName || tgtName;
 
   try {
     const res = await fetch("https://api.sarvam.ai/v1/chat/completions", {
@@ -63,7 +66,7 @@ export async function generateTipWithSarvam(
             content: `Original (${srcName}): "${originalText}"
 Translation (${tgtName}): "${translatedText}"
 
-Give ONE short language learning tip (max 15 words) about this ${srcName} text — a grammar pattern, word origin, cultural nuance, or literal meaning that helps someone learn ${srcName}. Reply with ONLY the tip, no thinking, no intro.`,
+Give ONE short language learning tip (max 15 words) about this ${srcName} text — a grammar pattern, word origin, cultural nuance, or literal meaning that helps someone learn ${srcName}. Write the tip in ${outputLang}. Reply with ONLY the tip, no thinking, no intro.`,
           },
         ],
         max_tokens: 60,
