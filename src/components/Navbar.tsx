@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { LogOut } from "lucide-react";
+import { LogOut, Volume2 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { toast } from "sonner";
@@ -57,10 +57,20 @@ const FOREIGN_LANGUAGES = [
     { code: "it", name: "Italian" },
 ];
 
+const SPEAKERS = [
+    { code: "shubh", name: "Shubh (Neutral)" },
+    { code: "ritu", name: "Ritu (Soft)" },
+    { code: "simran", name: "Simran (Natural)" },
+    { code: "amit", name: "Amit (Deep)" },
+    { code: "aditya", name: "Aditya (Expressive)" },
+    { code: "rahul", name: "Rahul (Young)" },
+];
+
 export default function Navbar() {
     const { user } = useUser();
     const me = useQuery(api.users.getMe);
     const updateLanguage = useMutation(api.users.updateLanguage);
+    const updateSpeaker = useMutation(api.users.updateSpeaker);
 
     const handleLanguageChange = async (lang: string) => {
         try {
@@ -68,6 +78,15 @@ export default function Navbar() {
             toast.success(`Language updated`);
         } catch {
             toast.error("Failed to update language");
+        }
+    };
+
+    const handleSpeakerChange = async (speaker: string) => {
+        try {
+            await updateSpeaker({ speaker });
+            toast.success(`Voice persona updated`);
+        } catch {
+            toast.error("Failed to update voice persona");
         }
     };
 
@@ -106,6 +125,29 @@ export default function Navbar() {
                             {FOREIGN_LANGUAGES.map((lang) => (
                                 <SelectItem key={lang.code} value={lang.code} className="text-zinc-200 focus:bg-zinc-800 focus:text-white">
                                     {lang.name}
+                                </SelectItem>
+                            ))}
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+
+                <Select
+                    value={me?.preferredSpeaker || "shubh"}
+                    onValueChange={handleSpeakerChange}
+                >
+                    <SelectTrigger
+                        size="sm"
+                        className="h-7 w-auto gap-1 border-zinc-700 bg-zinc-900 text-xs text-zinc-300 hover:bg-zinc-800"
+                    >
+                        <Volume2 className="h-3 w-3 mr-1" />
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-zinc-900 border-zinc-700">
+                        <SelectGroup>
+                            <SelectLabel>Voice Persona</SelectLabel>
+                            {SPEAKERS.map((speaker) => (
+                                <SelectItem key={speaker.code} value={speaker.code} className="text-zinc-200 focus:bg-zinc-800 focus:text-white">
+                                    {speaker.name}
                                 </SelectItem>
                             ))}
                         </SelectGroup>

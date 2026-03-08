@@ -178,6 +178,30 @@ export const updateLanguage = mutation({
 });
 
 /**
+ * updateSpeaker — Updates the current user's preferred TTS speaker.
+ */
+export const updateSpeaker = mutation({
+  args: {
+    speaker: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
+      .unique();
+
+    if (!user) throw new Error("User not found");
+
+    await ctx.db.patch(user._id, {
+      preferredSpeaker: args.speaker,
+    });
+  },
+});
+
+/**
  * completeOnboarding — Sets the user's preferred language and marks onboarding as done.
  */
 export const completeOnboarding = mutation({

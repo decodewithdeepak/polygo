@@ -9,12 +9,13 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery, useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { SARVAM_LANG_CODES } from "../../../convex/shared";
 import { Id } from "../../../convex/_generated/dataModel";
 import { formatMessageTime } from "@/lib/utils/formatTime";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Trash2 } from "lucide-react";
+import { Trash2, Volume2, Loader2 } from "lucide-react";
 import Image from "next/image";
 import ReactionPicker from "./ReactionPicker";
 import MessageReactions from "./MessageReactions";
@@ -48,6 +49,32 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
     const handleDelete = async () => {
         await deleteMessage({ messageId: message._id });
         setConfirmOpen(false);
+    };
+
+    const runGenerateTTS = useAction(api.sarvam.generateTTS);
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    const handlePlay = async () => {
+        if (isPlaying) return;
+        setIsPlaying(true);
+        try {
+            const base64 = await runGenerateTTS({
+                text: displayContent,
+                target_language_code: userLang === "en" ? "en-IN" : (SARVAM_LANG_CODES[userLang] || "en-IN"),
+                speaker: me?.preferredSpeaker || "shubh",
+            });
+
+            if (base64) {
+                const audio = new Audio("data:audio/wav;base64," + base64);
+                audio.onended = () => setIsPlaying(false);
+                await audio.play();
+            } else {
+                setIsPlaying(false);
+            }
+        } catch (error) {
+            console.error("Playback error:", error);
+            setIsPlaying(false);
+        }
     };
 
     const me = useQuery(api.users.getMe);
@@ -159,9 +186,24 @@ export default function MessageBubble({ message, isMyMessage, currentUserId }: M
                         </p>
 
                         <div className="mt-1 flex items-center justify-between gap-4">
-                            <p className={`text-[9px] ${isMyMessage ? "text-zinc-500" : "text-zinc-500"}`}>
-                                {formattedTime} {isTranslated && "• Translated"}
-                            </p>
+                            <div className="flex items-center gap-2">
+                                <p className={`text-[9px] ${isMyMessage ? "text-zinc-500" : "text-zinc-500"}`}>
+                                    {formattedTime} {isTranslated && "• Translated"}
+                                </p>
+                                <button
+                                    onClick={handlePlay}
+                                    disabled={isPlaying}
+                                    className={`p-1 rounded-full hover:bg-zinc-200/50 transition-colors ${isPlaying ? "animate-pulse" : ""
+                                        } ${isMyMessage ? "text-zinc-600" : "text-zinc-400"}`}
+                                    title="Play message"
+                                >
+                                    {isPlaying ? (
+                                        <Loader2 className="h-3 w-3 animate-spin" />
+                                    ) : (
+                                        <Volume2 className="h-3 w-3" />
+                                    )}
+                                </button>
+                            </div>
 
                             {hasTranslation && (
                                 <button
