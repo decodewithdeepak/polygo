@@ -17,9 +17,11 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { SendHorizontal, PenLine, Puzzle } from "lucide-react";
+import { SendHorizontal, PenLine, Puzzle, Mic, Square } from "lucide-react";
 import { useQuery, useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { useAudioRecorder } from "../../hooks/useAudioRecorder";
+import { transcribeAudioAction } from "../../app/actions/stt";
 
 const SURPRISE_MESSAGES: Record<string, string[]> = {
     en: ["Hey! How's your day going? 😊", "What's up! Hope you're having a great time! ✨", "Hi there! Anything fun happening today? 🎉", "Hope you're doing awesome! 💪", "Just wanted to say hello! 👋"],
@@ -59,9 +61,11 @@ export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping,
     const [messageContent, setMessageContent] = useState("");
     const [isSending, setIsSending] = useState(false);
     const [isAIThinking, setIsAIThinking] = useState(false);
+    const [isTranscribing, setIsTranscribing] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const me = useQuery(api.users.getMe);
     const generateAIReply = useAction(api.ai.generateContextualReply);
+    const { isRecording, startRecording, stopRecording } = useAudioRecorder();
 
     const handleSurprise = () => {
         const lang = me?.preferredLanguage || "en";
@@ -87,6 +91,30 @@ export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping,
             console.error("AI reply error:", e);
         } finally {
             setIsAIThinking(false);
+        }
+    };
+
+    const handleRecordToggle = async () => {
+        if (isRecording) {
+            const audioBlob = await stopRecording();
+            if (audioBlob) {
+                setIsTranscribing(true);
+                try {
+                    const formData = new FormData();
+                    formData.append("file", audioBlob, "audio.webm");
+                    const transcript = await transcribeAudioAction(formData);
+                    if (transcript) {
+                        setMessageContent((prev) => prev ? prev + " " + transcript : transcript);
+                        textareaRef.current?.focus();
+                    }
+                } catch (e) {
+                    console.error("Transcription error:", e);
+                } finally {
+                    setIsTranscribing(false);
+                }
+            }
+        } else {
+            await startRecording();
         }
     };
 
@@ -197,7 +225,7 @@ export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping,
                 {recentMessages && recentMessages.length > 0 && (
                     <button
                         onClick={handleAIReply}
-                        disabled={isSending || isAIThinking}
+                        disabled={isSending || isAIThinking || isTranscribing || isRecording}
                         className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-violet-950/60 text-violet-400 transition-all hover:bg-violet-900/60 hover:text-violet-200 disabled:cursor-not-allowed disabled:opacity-50 border border-violet-800/40"
                         title="AI Reply — suggest a contextual reply in your language"
                     >
@@ -208,10 +236,30 @@ export default function MessageInput({ onSendMessage, onTyping, onStoppedTyping,
                     </button>
                 )}
 
+                {/* Voice Record / Stop Button */}
+                <button
+                    onClick={handleRecordToggle}
+                    disabled={isSending || isAIThinking || isTranscribing}
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-md transition-all disabled:cursor-not-allowed disabled:opacity-50 border ${
+                        isRecording 
+                            ? "bg-red-500/20 text-red-500 border-red-500/50 hover:bg-red-500/30 animate-pulse" 
+                            : "bg-zinc-800/60 text-zinc-400 border-zinc-700/50 hover:bg-zinc-700 hover:text-zinc-200"
+                    }`}
+                    title={isRecording ? "Stop Recording" : "Record Speech-to-Text"}
+                >
+                    {isTranscribing ? (
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-400 border-t-transparent" />
+                    ) : isRecording ? (
+                        <Square className="h-4 w-4 fill-current" />
+                    ) : (
+                        <Mic className="h-4 w-4" />
+                    )}
+                </button>
+
                 {/* Send button — visual alternative to pressing Enter */}
                 <button
                     onClick={handleSendMessage}
-                    disabled={!messageContent.trim() || isSending || isAIThinking}
+                    disabled={!messageContent.trim() || isSending || isAIThinking || isTranscribing || isRecording}
                     className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-900 transition-all hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50 border border-zinc-200"
                 // disabled when: empty message OR currently sending
                 // flex-shrink-0: prevents the button from shrinking when textarea expands

@@ -132,7 +132,7 @@ export default function MessageBubble({ message, isMyMessage, currentUserId, isG
 
     return (
         <div
-            className={`group flex items-end gap-2 ${isMyMessage ? "justify-end" : "justify-start"}`}
+            className={`group flex items-end gap-2 relative hover:z-50 ${isMyMessage ? "justify-end" : "justify-start"}`}
         >
             {!isMyMessage && (
                 <div className="shrink-0">
@@ -169,7 +169,7 @@ export default function MessageBubble({ message, isMyMessage, currentUserId, isG
                     >
                         {/* Language Tip — shows on hover, tooltip on hover */}
                         {message.nuanceFlags?.hasNuance && (
-                            <div className="absolute -top-2 -right-2 z-[100] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            <div className="absolute -top-2 -right-2 z-[999] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                 <div className="relative group/tip">
                                     <div className={`flex h-5 w-5 items-center justify-center rounded-full border text-[10px] font-bold shadow-lg cursor-default ${isMyMessage
                                         ? "bg-white border-zinc-300 text-zinc-900"
@@ -177,7 +177,7 @@ export default function MessageBubble({ message, isMyMessage, currentUserId, isG
                                         }`}>
                                         i
                                     </div>
-                                    <div className={`absolute bottom-full mb-2 w-64 p-3 bg-zinc-950 border border-zinc-800 text-zinc-100 text-[12px] shadow-2xl rounded-xl opacity-0 invisible group-hover/tip:opacity-100 group-hover/tip:visible transition-all duration-200 pointer-events-none z-[200] ${isMyMessage ? "right-0" : "left-0"}`}>
+                                    <div className={`absolute bottom-full mb-2 w-64 p-3 bg-zinc-950 border border-zinc-800 text-zinc-100 text-[12px] shadow-2xl rounded-xl opacity-0 invisible group-hover/tip:opacity-100 group-hover/tip:visible transition-all duration-200 pointer-events-none z-[9999] ${isMyMessage ? "right-0" : "left-0"}`}>
                                         <div className="flex flex-col gap-1.5 leading-relaxed">
                                             <div className="flex items-center gap-2 border-b border-zinc-800 pb-1.5 mb-1">
                                                 <span className="h-1.5 w-1.5 rounded-full bg-zinc-400" />
